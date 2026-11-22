@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.auth-container {
+    max-width: 430px;
+    margin: 50px auto;
+    padding: 25px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.07);
+}
+.auth-container input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 13px;
+}
+.auth-container button {
+    width: 100%;
+    margin-top: 15px;
+}
+.auth-container h2, .auth-container p {
+    text-align: center;
+}
+.auth-switch {
+    cursor: pointer;
+    color: #b99cff;
+    text-align: center;
+    margin-top: 18px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h2>✦ StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>Welcome to <span>StudentVerse</span></h1>
+    <p>Your learning journey begins here.</p>
+</section>
+
+<div class="auth-container">
+
+    <h2 id="formTitle">Create Account</h2>
+
+    <form id="authForm">
+
+        <input type="text" id="authName"
+        placeholder="Your Name" required>
+
+        <input type="email" id="authEmail"
+        placeholder="Email Address" required>
+
+        <input type="password" id="authPassword"
+        placeholder="Create Password" required minlength="6">
+
+        <button type="submit" id="authButton">
+            Sign Up
+        </button>
+
+    </form>
+
+    <p class="auth-switch" onclick="toggleForm()">
+        Already have an account? Login
+    </p>
+
+    <p id="authMessage"></p>
+
+</div>
+
+<script>
+
+let isLogin = false;
+
+function toggleForm() {
+    isLogin = !isLogin;
+
+    document.getElementById("formTitle").innerText =
+        isLogin ? "Login to StudentVerse" : "Create Account";
+
+    document.getElementById("authButton").innerText =
+        isLogin ? "Login" : "Sign Up";
+
+    document.querySelector(".auth-switch").innerText =
+        isLogin ? "New student? Create Account" :
+        "Already have an account? Login";
+
+    document.getElementById("authName").style.display =
+        isLogin ? "none" : "block";
+
+    document.getElementById("authMessage").innerText = "";
+}
+
+document.getElementById("authForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("authEmail").value.trim().toLowerCase();
+    const password = document.getElementById("authPassword").value;
+    const name = document.getElementById("authName").value.trim();
+
+    let accounts = JSON.parse(localStorage.getItem("studentAccounts")) || [];
+
+    if (isLogin) {
+
+        const account = accounts.find(function(item) {
+            return item.email === email && item.password === password;
+        });
+
+        if (!account) {
+            document.getElementById("authMessage").innerText =
+                "Incorrect email or password.";
+            return;
+        }
+
+        localStorage.setItem("studentLoggedIn", email);
+        window.location.href = "index.html";
+
+    } else {
+
+        if (!name) {
+            document.getElementById("authMessage").innerText =
+                "Please enter your name.";
+            return;
+        }
+
+        const existing = accounts.find(function(item) {
+            return item.email === email;
+        });
+
+        if (existing) {
+            document.getElementById("authMessage").innerText =
+                "This email is already registered.";
+            return;
+        }
+
+        accounts.push({
+            name: name,
+            email: email,
+            password: password
+        });
+
+        localStorage.setItem("studentAccounts", JSON.stringify(accounts));
+        localStorage.setItem("studentLoggedIn", email);
+
+        window.location.href = "profile.html";
+    }
+});
+
+</script>
+
+</body>
+</html>

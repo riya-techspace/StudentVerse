@@ -2,342 +2,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartStudy | StudentVerse</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .study-text {
-      white-space: pre-line;
-      line-height: 1.8;
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.06);
-      margin-top: 15px;
-    }
-    .back-btn {
-      margin: 12px 5px;
-      padding: 10px 18px;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #7653d6;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartStudy | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0618;color:#fff;font-family:Arial,sans-serif}
+.study{max-width:1000px;margin:auto;padding:22px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.logo{font-size:23px;font-weight:bold;color:#c6a5ff}
+button,select{font:inherit}
+button{border:0;cursor:pointer}
+.back,.primary,.option{padding:13px 17px;border-radius:12px;color:white}
+.back{background:#29203e}
+.primary{background:linear-gradient(120deg,#7139db,#a45cff);width:100%;margin-top:15px}
+h1{font-size:30px;margin:25px 0 8px}
+.sub{color:#b9adc9;line-height:1.6}
+.panel{background:#171027;border:1px solid #392653;border-radius:18px;padding:20px;margin-top:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:18px}
+.option{background:#211638;border:1px solid #49316a;text-align:left;min-height:65px;transition:.2s}
+.option:hover{background:#39215b;transform:translateY(-2px)}
+select{width:100%;padding:14px;background:#211638;color:white;border:1px solid #49316a;border-radius:12px;margin-top:10px}
+.section{margin-top:20px}
+.content{white-space:pre-wrap;line-height:1.8;color:#ddd}
+.tag{color:#c7a4ff;font-size:13px}
+.hidden{display:none}
+.note{color:#b9adc9;font-size:13px;line-height:1.6}
+</style>
 </head>
 <body>
+<div class="study">
+<header class="top">
+<div class="logo">✦ StudentVerse</div>
+<button class="back" onclick="goHome()">⌂ Dashboard</button>
+</header>
 
-<div class="container">
+<h1>SmartStudy 📚</h1>
+<p class="sub">Choose your board, class and subject to explore your learning journey.</p>
 
-  <header>
-    <div class="logo">✦ StudentVerse</div>
-    <nav><a href="index.html">Home</a></nav>
-  </header>
+<div class="panel">
+<div class="tag">STEP 1 · SELECT BOARD</div>
+<div class="grid" id="boardOptions"></div>
 
-  <section class="hero">
-    <h1>Welcome to <span>SmartStudy</span></h1>
-    <p>Your learning journey starts here. Choose your board, class and subject.</p>
-  </section>
+<div class="section hidden" id="classSection">
+<div class="tag">STEP 2 · SELECT CLASS</div>
+<div class="grid" id="classOptions"></div>
+</div>
 
-  <section class="features">
+<div class="section hidden" id="subjectSection">
+<div class="tag">STEP 3 · SELECT SUBJECT</div>
+<div class="grid" id="subjectOptions"></div>
+</div>
 
-    <div id="selectionSection">
-      <h2 id="mainHeading">Choose Your Board</h2>
-      <p id="mainDescription">Select your board to continue.</p>
+<div class="section hidden" id="chapterSection">
+<div class="tag">STEP 4 · SELECT CHAPTER</div>
+<div class="grid" id="chapterOptions"></div>
+</div>
 
-      <div class="feature-grid" id="boardGrid">
-        <div class="feature-card" onclick="selectBoard('CBSE')">
-          <h3>CBSE</h3>
-          <p>Explore CBSE learning resources.</p>
-        </div>
-        <div class="feature-card" onclick="selectBoard('ICSE/ISC')">
-          <h3>ICSE / ISC</h3>
-          <p>Explore CISCE learning resources.</p>
-        </div>
-      </div>
-
-      <div class="feature-grid" id="classGrid" style="display:none;"></div>
-
-      <div id="subjectSection" style="display:none;">
-        <div class="feature-grid" id="subjectGrid"></div>
-      </div>
-
-      <div id="chapterSection" style="display:none;">
-        <h2 id="chapterHeading">Choose Your Chapter</h2>
-        <div class="feature-grid" id="chapterGrid"></div>
-      </div>
-    </div>
-
-    <div id="chapterContent" style="display:none;">
-      <h2 id="contentHeading"></h2>
-      <p>Choose a learning section:</p>
-
-      <div class="feature-grid" id="contentOptions">
-        <div class="feature-card" onclick="showStudyContent('overview')">
-          <h3>📖 Chapter Overview</h3>
-          <p>Understand the chapter basics.</p>
-        </div>
-
-        <div class="feature-card" onclick="showStudyContent('notes')">
-          <h3>📝 Detailed Notes</h3>
-          <p>Explore important concepts.</p>
-        </div>
-
-        <div class="feature-card" onclick="showStudyContent('formulas')">
-          <h3>📐 Important Formulas</h3>
-          <p>Revise key formulas.</p>
-        </div>
-
-        <div class="feature-card" onclick="showStudyContent('examples')">
-          <h3>💡 Solved Examples</h3>
-          <p>Learn through examples.</p>
-        </div>
-
-        <div class="feature-card" onclick="showStudyContent('practice')">
-          <h3>🎯 Practice Questions</h3>
-          <p>Test your understanding.</p>
-        </div>
-      </div>
-
-      <div id="studyContent" style="display:none;">
-        <h3 id="studyTitle"></h3>
-        <div class="study-text" id="studyDescription"></div>
-        <button class="back-btn" onclick="backToOptions()">← Back to Learning Sections</button>
-      </div>
-    </div>
-
-    <button class="back-btn" id="backBtn" style="display:none;" onclick="goBack()">← Back</button>
-
-  </section>
+<div class="section hidden" id="lessonSection">
+<div class="tag">YOUR STUDY SPACE</div>
+<div id="lessonContent" class="content"></div>
+</div>
+</div>
+<p class="note">Syllabus note: Chapter lists are starter data, not a verified complete 2026–27 board syllabus. Subject availability and prescribed books can vary by board and school.</p>
 </div>
 
 <script>
-let selectedBoard = "";
-let selectedClass = "";
-let selectedSubject = "";
-let selectedChapter = "";
-
-const subjectLists = {
-  "CBSE": {
-    junior: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Computer"],
-    middle: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Computer Applications"],
-    senior: ["English", "Physics", "Chemistry", "Mathematics", "Biology", "Accountancy", "Business Studies", "Economics", "Computer Science"]
-  },
-  "ICSE/ISC": {
-    junior: ["English", "Second Language", "Mathematics", "Science", "History & Civics", "Geography", "Computer Studies"],
-    middle: ["English", "Second Language", "Mathematics", "Physics", "Chemistry", "Biology", "History & Civics", "Geography", "Computer Applications"],
-    senior: ["English", "Physics", "Chemistry", "Mathematics", "Biology", "Accountancy", "Economics", "History", "Computer Science"]
-  }
+// SUBJECT DATABASE
+// Add or update subjects here without changing the interface.
+const subjects = {
+CBSE: {
+6:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
+7:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
+8:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
+9:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Information Technology"],
+10:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Information Technology"],
+11:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Informatics Practices","History","Political Science","Geography","Psychology","Sociology"],
+12:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Informatics Practices","History","Political Science","Geography","Psychology","Sociology"]
+},
+ICSE: {
+6:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Studies","Art"],
+7:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Studies","Art"],
+8:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Studies","Art"],
+9:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Commercial Studies","Economics"],
+10:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Commercial Studies","Economics"],
+11:[],
+12:[]
+},
+ISC: {
+6:[],7:[],8:[],9:[],10:[],
+11:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Commerce","Economics","Computer Science","History","Political Science","Geography","Psychology","Sociology"],
+12:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Commerce","Economics","Computer Science","History","Political Science","Geography","Psychology","Sociology"]
+}
 };
 
-const physicsChapters = [
-  "1. Units and Measurements",
-  "2. Motion in a Straight Line",
-  "3. Motion in a Plane",
-  "4. Laws of Motion",
-  "5. Work, Energy and Power",
-  "6. System of Particles and Rotational Motion",
-  "7. Gravitation",
-  "8. Mechanical Properties of Solids",
-  "9. Mechanical Properties of Fluids",
-  "10. Thermal Properties of Matter",
-  "11. Thermodynamics",
-  "12. Kinetic Theory",
-  "13. Oscillations",
-  "14. Waves"
-];
+// Starter chapter data. Replace these with verified board-specific chapter lists.
+const chapters = {
+"CBSE-6-Mathematics":["Patterns in Mathematics","Lines and Angles","Number Play","Data Handling and Presentation","Prime Time","Perimeter and Area","Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"],
+"CBSE-6-Science":["The Wonderful World of Science","Diversity in the Living World","Mindful Eating","Exploring Magnets","Measurement of Length and Motion","Materials Around Us","Temperature and its Measurement","A Journey through States of Water","Methods of Separation","Living Creatures"],
+"CBSE-6-English":["Reading Skills","Writing Skills","Grammar","Literature"],
+"CBSE-6-Hindi":["अपठित बोध","व्याकरण","लेखन","पाठ्यपुस्तक"],
 
-function showElement(id) {
-  document.getElementById(id).style.display = "block";
+"CBSE-7-Mathematics":["Integers","Fractions and Decimals","Data Handling","Simple Equations","Lines and Angles","The Triangle and its Properties","Comparing Quantities","Rational Numbers","Perimeter and Area","Algebraic Expressions"],
+"CBSE-7-Science":["Nutrition in Plants","Nutrition in Animals","Heat","Acids, Bases and Salts","Physical and Chemical Changes","Respiration in Organisms","Transportation in Animals and Plants","Reproduction in Plants","Motion and Time","Electric Current and its Effects"],
+"CBSE-8-Mathematics":["Rational Numbers","Linear Equations","Understanding Quadrilaterals","Data Handling","Squares and Square Roots","Cubes and Cube Roots","Comparing Quantities","Algebraic Expressions","Mensuration"],
+"CBSE-8-Science":["Crop Production","Microorganisms","Synthetic Fibres","Materials: Metals and Non-Metals","Coal and Petroleum","Combustion and Flame","Conservation of Plants and Animals","Cell Structure","Force and Pressure"],
+
+"CBSE-9-Mathematics":["Number Systems","Polynomials","Coordinate Geometry","Linear Equations in Two Variables","Introduction to Euclid's Geometry","Lines and Angles","Triangles","Quadrilaterals","Circles","Heron's Formula"],
+"CBSE-9-Science":["Matter in Our Surroundings","Is Matter Around Us Pure","Atoms and Molecules","Structure of the Atom","The Fundamental Unit of Life","Tissues","Motion","Force and Laws of Motion","Gravitation","Work and Energy"],
+"CBSE-9-English":["Reading","Writing and Grammar","Literature"],
+"CBSE-9-Hindi":["अपठित बोध","व्याकरण","लेखन","साहित्य"],
+"CBSE-9-Social Science":["History","Geography","Political Science","Economics"],
+
+"CBSE-10-Mathematics":["Real Numbers","Polynomials","Pair of Linear Equations","Quadratic Equations","Arithmetic Progressions","Triangles","Coordinate Geometry","Introduction to Trigonometry","Applications of Trigonometry","Circles"],
+"CBSE-10-Science":["Chemical Reactions","Acids, Bases and Salts","Metals and Non-Metals","Carbon Compounds","Life Processes","Control and Coordination","How do Organisms Reproduce","Heredity","Light","The Human Eye"],
+"CBSE-10-English":["Reading","Writing","Grammar","Literature"],
+"CBSE-10-Hindi":["अपठित बोध","व्याकरण","लेखन","साहित्य"],
+"CBSE-10-Social Science":["History","Geography","Political Science","Economics"],
+
+"CBSE-11-Physics":["Units and Measurements","Motion in a Straight Line","Motion in a Plane","Laws of Motion","Work, Energy and Power","System of Particles and Rotational Motion","Gravitation","Mechanical Properties of Solids","Mechanical Properties of Fluids","Thermal Properties of Matter","Thermodynamics","Kinetic Theory","Oscillations","Waves"],
+"CBSE-11-Chemistry":["Some Basic Concepts of Chemistry","Structure of Atom","Classification of Elements","Chemical Bonding","Chemical Thermodynamics","Equilibrium","Redox Reactions","Organic Chemistry: Basic Principles","Hydrocarbons"],
+"CBSE-11-Mathematics":["Sets","Relations and Functions","Trigonometric Functions","Complex Numbers","Linear Inequalities","Permutations and Combinations","Binomial Theorem","Sequences and Series","Straight Lines","Conic Sections","Introduction to Three Dimensional Geometry","Limits and Derivatives","Statistics","Probability"],
+"CBSE-11-Biology":["The Living World","Biological Classification","Plant Kingdom","Animal Kingdom","Morphology of Flowering Plants","Anatomy of Flowering Plants","Structural Organisation in Animals","Cell: The Unit of Life","Biomolecules","Cell Cycle and Cell Division","Photosynthesis","Respiration in Plants","Plant Growth","Breathing and Exchange of Gases","Body Fluids and Circulation","Excretion","Locomotion","Neural Control","Chemical Coordination"],
+"CBSE-11-English":["Reading Skills","Writing Skills","Hornbill","Snapshots"],
+"CBSE-11-Accountancy":["Introduction to Accounting","Theory Base of Accounting","Recording of Transactions","Bank Reconciliation","Trial Balance","Depreciation","Bills of Exchange","Financial Statements"],
+"CBSE-11-Business Studies":["Nature and Purpose of Business","Forms of Business Organisation","Public and Private Enterprises","Business Services","Emerging Modes of Business","Social Responsibility","Formation of a Company","Sources of Business Finance","Small Business","Internal Trade","International Business"],
+"CBSE-11-Economics":["Introduction to Economics","Collection of Data","Organisation of Data","Presentation of Data","Measures of Central Tendency","Correlation","Introduction to Microeconomics","Consumer Equilibrium","Demand","Producer Behaviour","Cost","Market"],
+"CBSE-11-Computer Science":["Computer Systems","Computational Thinking","Python Programming","Data Handling","Society, Law and Ethics"],
+
+"CBSE-12-Physics":["Electric Charges and Fields","Electrostatic Potential and Capacitance","Current Electricity","Moving Charges and Magnetism","Magnetism and Matter","Electromagnetic Induction","Alternating Current","Electromagnetic Waves","Ray Optics","Wave Optics","Dual Nature of Radiation","Atoms","Nuclei","Semiconductor Electronics"],
+"CBSE-12-Chemistry":["Solutions","Electrochemistry","Chemical Kinetics","d- and f-Block Elements","Coordination Compounds","Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers","Aldehydes, Ketones and Carboxylic Acids","Amines","Biomolecules"],
+"CBSE-12-Mathematics":["Relations and Functions","Inverse Trigonometric Functions","Matrices","Determinants","Continuity and Differentiability","Applications of Derivatives","Integrals","Applications of Integrals","Differential Equations","Vector Algebra","Three Dimensional Geometry","Linear Programming","Probability"],
+"CBSE-12-Biology":["Reproduction","Sexual Reproduction in Flowering Plants","Human Reproduction","Reproductive Health","Principles of Inheritance","Molecular Basis of Inheritance","Evolution","Human Health and Disease","Microbes in Human Welfare","Biotechnology","Organisms and Populations","Ecosystem","Biodiversity"],
+"CBSE-12-English":["Reading Skills","Writing Skills","Flamingo","Vistas"],
+"CBSE-12-Accountancy":["Accounting for Partnership Firms","Change in Profit Sharing Ratio","Admission of a Partner","Retirement and Death","Dissolution","Share Capital","Debentures","Financial Statements","Cash Flow Statement"],
+"CBSE-12-Business Studies":["Nature and Significance of Management","Principles of Management","Business Environment","Planning","Organising","Staffing","Directing","Controlling","Financial Management","Marketing Management","Consumer Protection"],
+"CBSE-12-Economics":["National Income","Money and Banking","Income and Employment","Government Budget","Balance of Payments","Development Experience","Indian Economy"],
+"CBSE-12-Computer Science":["Python Revision","Functions","File Handling","Data Structures","Database Concepts","SQL","Computer Networks","Society, Law and Ethics"],
+
+// ICSE / ISC starter lists
+"ICSE-9-Mathematics":["Pure Arithmetic","Commercial Mathematics","Algebra","Geometry","Statistics","Mensuration","Trigonometry","Coordinate Geometry"],
+"ICSE-10-Mathematics":["Commercial Mathematics","Algebra","Geometry","Mensuration","Trigonometry","Statistics","Probability"],
+"ICSE-9-Physics":["Measurements and Experimentation","Motion in One Dimension","Laws of Motion","Fluids","Heat and Energy","Light","Sound","Electricity and Magnetism"],
+"ICSE-10-Physics":["Force","Work, Energy and Power","Machines","Refraction of Light","Sound","Current Electricity","Household Circuits","Electromagnetism"],
+"ICSE-9-Chemistry":["Language of Chemistry","Chemical Changes","Water","Atomic Structure","Periodic Table","Study of Gas Laws","Atmospheric Pollution"],
+"ICSE-10-Chemistry":["Periodic Properties","Chemical Bonding","Acids, Bases and Salts","Analytical Chemistry","Mole Concept","Electrolysis","Metallurgy","Organic Chemistry"],
+"ISC-11-Physics":["Physical World and Measurement","Kinematics","Laws of Motion","Work, Energy and Power","Rotational Motion","Gravitation","Properties of Matter","Thermodynamics","Oscillations","Waves"],
+"ISC-12-Physics":["Electrostatics","Current Electricity","Magnetism","Electromagnetic Induction","Alternating Current","Electromagnetic Waves","Optics","Dual Nature","Atoms and Nuclei","Electronic Devices"],
+"ISC-11-Chemistry":["Some Basic Concepts","Atomic Structure","Periodic Classification","Chemical Bonding","States of Matter","Thermodynamics","Equilibrium","Redox Reactions","Organic Chemistry"],
+"ISC-12-Chemistry":["Solutions","Electrochemistry","Chemical Kinetics","Surface Chemistry","Isolation of Elements","p-Block Elements","d- and f-Block Elements","Coordination Compounds","Organic Compounds","Biomolecules"],
+"ISC-11-Mathematics":["Sets and Functions","Algebra","Coordinate Geometry","Calculus","Statistics","Probability"],
+"ISC-12-Mathematics":["Relations and Functions","Algebra","Calculus","Vectors","Three Dimensional Geometry","Linear Programming","Probability"]
+};
+
+let selectedBoard="", selectedClass="", selectedSubject="";
+
+const $ = id => document.getElementById(id);
+
+function show(id){
+  $(id).classList.remove("hidden");
 }
-
-function hideElement(id) {
-  document.getElementById(id).style.display = "none";
+function hide(id){
+  $(id).classList.add("hidden");
 }
-
-function selectBoard(board) {
-  selectedBoard = board;
-  hideElement("boardGrid");
-  showElement("classGrid");
-  showElement("backBtn");
-
-  document.getElementById("mainHeading").textContent =
-    board + " - Choose Your Class";
-  document.getElementById("mainDescription").textContent =
-    "Select your class to continue.";
-
-  const grid = document.getElementById("classGrid");
-  grid.innerHTML = "";
-
-  for (let i = 6; i <= 12; i++) {
-    const card = document.createElement("div");
-    card.className = "feature-card";
-    card.innerHTML = "<h3>Class " + i + "</h3>";
-    card.onclick = () => selectClass(String(i));
-    grid.appendChild(card);
+function button(text, action){
+  const b=document.createElement("button");
+  b.className="option";
+  b.textContent=text;
+  b.onclick=action;
+  return b;
+}
+function goHome(){
+  location.href="index.html";
+}
+function resetFrom(level){
+  if(level<=1){hide("classSection");hide("subjectSection");hide("chapterSection");hide("lessonSection");}
+  if(level<=2){hide("subjectSection");hide("chapterSection");hide("lessonSection");}
+  if(level<=3){hide("chapterSection");hide("lessonSection");}
+  if(level<=4){hide("lessonSection");}
+}
+function selectBoard(board){
+  selectedBoard=board;
+  resetFrom(1);
+  $("boardOptions").querySelectorAll("button").forEach(b=>b.style.outline="none");
+  renderClasses();
+}
+function renderClasses(){
+  show("classSection");
+  $("classOptions").innerHTML="";
+  for(let c=6;c<=12;c++){
+    $("classOptions").appendChild(button("Class "+c,()=>selectClass(c)));
   }
 }
-
-function selectClass(className) {
-  selectedClass = className;
-  hideElement("classGrid");
-  showElement("subjectSection");
-
-  document.getElementById("mainHeading").textContent =
-    selectedBoard + " - Class " + selectedClass + " Subjects";
-  document.getElementById("mainDescription").textContent =
-    "Select a subject to explore its chapters.";
-
-  let group = className <= 8 ? "junior" :
-              className <= 10 ? "middle" : "senior";
-
-  const subjects = subjectLists[selectedBoard][group];
-  const grid = document.getElementById("subjectGrid");
-  grid.innerHTML = "";
-
-  subjects.forEach(subject => {
-    const card = document.createElement("div");
-    card.className = "feature-card";
-    card.innerHTML = "<h3>" + subject + "</h3>";
-    card.onclick = () => selectSubject(subject);
-    grid.appendChild(card);
+function selectClass(c){
+  selectedClass=c;
+  resetFrom(2);
+  show("subjectSection");
+  $("subjectOptions").innerHTML="";
+  const list=subjects[selectedBoard][c] || [];
+  if(!list.length){
+    $("subjectOptions").textContent="This board does not use this class level. Choose an available class.";
+    return;
+  }
+  list.forEach(s=>$("subjectOptions").appendChild(button(s,()=>selectSubject(s))));
+}
+function selectSubject(s){
+  selectedSubject=s;
+  resetFrom(3);
+  show("chapterSection");
+  $("chapterOptions").innerHTML="";
+  const key=`${selectedBoard}-${selectedClass}-${s}`;
+  let list=chapters[key];
+  if(!list){
+    list=["Chapter list to be added","Textbook / Unit 1","Textbook / Unit 2","Textbook / Unit 3","Textbook / Unit 4"];
+  }
+  list.forEach((ch,i)=>{
+    $("chapterOptions").appendChild(button(`${i+1}. ${ch}`,()=>openChapter(ch,i+1)));
   });
 }
+function openChapter(ch,n){
+  show("lessonSection");
+  $("lessonContent").textContent=
+`📘 ${selectedBoard} · Class ${selectedClass}
+📚 ${selectedSubject}
+📖 ${ch}
 
-function selectSubject(subject) {
-  selectedSubject = subject;
-  hideElement("subjectSection");
-  showElement("chapterSection");
+WELCOME TO YOUR STUDY SPACE
 
-  document.getElementById("mainHeading").textContent =
-    selectedSubject + " Chapters";
+Overview
+Study the main concepts of this chapter and understand the key ideas.
 
-  let chapters = [];
+Notes
+Your chapter notes will be added here.
 
-  if (selectedBoard === "CBSE" &&
-      selectedClass === "11" &&
-      selectedSubject === "Physics") {
-    chapters = physicsChapters;
-  } else {
-    for (let i = 1; i <= 10; i++) {
-      chapters.push("Chapter " + i);
-    }
-  }
+Important Concepts
+• Understand the definitions.
+• Learn the important concepts.
+• Practice textbook examples.
 
-  document.getElementById("chapterHeading").textContent =
-    selectedBoard + " Class " + selectedClass + " " +
-    selectedSubject + " - Choose Your Chapter";
+Formulas
+Applicable formulas and important facts will be added here.
 
-  const grid = document.getElementById("chapterGrid");
-  grid.innerHTML = "";
+Examples
+Worked examples will be added here.
 
-  chapters.forEach(chapter => {
-    const card = document.createElement("div");
-    card.className = "feature-card";
-    card.innerHTML = "<h3>" + chapter + "</h3>";
-    card.onclick = () => selectChapter(chapter);
-    grid.appendChild(card);
-  });
+Practice Questions
+1. Write a short summary of this chapter.
+2. Explain its important concepts.
+3. Attempt the textbook exercises.
+
+Your learning journey starts here! ✨`;
+  $("lessonContent").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
-function selectChapter(chapter) {
-  selectedChapter = chapter;
-  hideElement("chapterSection");
-  hideElement("selectionSection");
-  showElement("chapterContent");
-
-  document.getElementById("contentHeading").textContent =
-    selectedSubject + " - " + selectedChapter;
-}
-
-function showStudyContent(type) {
-  hideElement("contentOptions");
-  showElement("studyContent");
-
-  const title = document.getElementById("studyTitle");
-  const description = document.getElementById("studyDescription");
-
-  const isPhysicsFirstChapter =
-    selectedBoard === "CBSE" &&
-    selectedClass === "11" &&
-    selectedSubject === "Physics" &&
-    selectedChapter.includes("Units and Measurements");
-
-  const content = {
-    overview: {
-      title: "Chapter Overview",
-      text: "You are studying " + selectedChapter + " in " +
-        selectedBoard + " Class " + selectedClass + " " +
-        selectedSubject + ".\n\nThis section will introduce the main ideas, key concepts and learning objectives of this chapter."
-    },
-    notes: {
-      title: "Detailed Notes",
-      text: "Study Notes: " + selectedChapter +
-        "\n\nUse this section to revise definitions, important concepts, explanations and key points.\n\nDetailed board-wise notes will be added in the content development stage."
-    },
-    formulas: {
-      title: "Important Formulas",
-      text: isPhysicsFirstChapter
-        ? "Mean Value:\na(mean) = (a1 + a2 + ... + an) / n\n\nAbsolute Error:\nΔa = |Measured Value - Mean Value|\n\nRelative Error:\nRelative Error = Mean Absolute Error / Mean Value\n\nPercentage Error:\nPercentage Error = Relative Error × 100"
-        : "Formula sheet for " + selectedChapter +
-          "\n\nChapter-specific formulas will be added here where applicable."
-    },
-    examples: {
-      title: "Solved Examples",
-      text: "Solved Examples: " + selectedChapter +
-        "\n\nStep-by-step examples and solutions will be added here for this chapter."
-    },
-    practice: {
-      title: "Practice Questions",
-      text: "Practice: " + selectedChapter +
-        "\n\n1. What is the main concept of this chapter?\n\n2. Write two important points you learned.\n\n3. Which topic from this chapter would you like to revise?\n\nChapter-specific MCQs and answer keys will be added here."
-    }
-  };
-
-  title.textContent = content[type].title;
-  description.textContent = content[type].text;
-}
-
-function backToOptions() {
-  hideElement("studyContent");
-  showElement("contentOptions");
-}
-
-function goBack() {
-  if (document.getElementById("chapterContent").style.display === "block") {
-    hideElement("chapterContent");
-    showElement("selectionSection");
-    showElement("chapterSection");
-    return;
-  }
-
-  if (document.getElementById("chapterSection").style.display === "block") {
-    hideElement("chapterSection");
-    showElement("subjectSection");
-    document.getElementById("mainHeading").textContent =
-      selectedBoard + " - Class " + selectedClass + " Subjects";
-    return;
-  }
-
-  if (document.getElementById("subjectSection").style.display === "block") {
-    hideElement("subjectSection");
-    showElement("classGrid");
-    document.getElementById("mainHeading").textContent =
-      selectedBoard + " - Choose Your Class";
-    return;
-  }
-
-  if (document.getElementById("classGrid").style.display === "grid") {
-    hideElement("classGrid");
-    showElement("boardGrid");
-    document.getElementById("mainHeading").textContent = "Choose Your Board";
-    document.getElementById("mainDescription").textContent =
-      "Select your board to continue.";
-    hideElement("backBtn");
-  }
-}
+["CBSE","ICSE","ISC"].forEach(b=>{
+  $("boardOptions").appendChild(button(b,()=>selectBoard(b)));
+});
 </script>
-
 </body>
 </html>
