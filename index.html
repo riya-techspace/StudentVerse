@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6c3bdb">
+  <title>StudentVerse</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <div class="logo">✦ StudentVerse</div>
+      <nav>
+  <a href="#">Home</a>
+  <a href="#features">Explore Features</a>
+  <a href="#myprogress">My Progress</a>
+  <a href="profile.html">My Profile</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Your Journey.<br><span>Your Universe.</span></h1>
+      <h2 id="welcomeStudent">Welcome to StudentVerse! 👋</h2>
+<p id="studentInfo">Your learning journey starts here.</p>
+      <p>
+        A place to learn, discover your potential,
+        build skills and achieve your dreams.
+      </p>
+      <a href="#features" class="start-btn">Explore StudentVerse →</a>
+    </section>
+
+    <section class="hero" id="myprogress">
+      <h2>🌟 My Progress</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>🏅 Challenge Score</h3>
+          <h1 id="dashboardScore">0</h1>
+          <p>Points earned in Challenge Arena</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>🏆 My Achievements</h3>
+          <h1 id="dashboardAchievements">0</h1>
+          <p>Achievements added to your wall</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <h2>Discover Your Universe</h2>
+
+      <div class="feature-grid">
+
+        <div class="feature-card" onclick="window.location.href='smartstudy.html'">
+          <h3>📚 SmartStudy</h3>
+          <p>Explore notes and chapter-wise learning resources.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='quizzone.html'">
+          <h3>🧠 Quiz Zone</h3>
+          <p>Test your knowledge with interactive quizzes.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='studyplanner.html'">
+          <h3>📅 Study Planner</h3>
+          <p>Organise your subjects and create a study routine.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='futurefinder.html'">
+          <h3>🚀 FutureFinder</h3>
+          <p>Discover careers, interests and new possibilities.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='opportunityzone.html'">
+          <h3>🏆 Opportunity Zone</h3>
+          <p>Explore scholarships, competitions, internships and exciting opportunities.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='challengearena.html'">
+          <h3>⚡ Challenge Arena</h3>
+          <p>Take daily challenges and improve your creativity and problem-solving skills.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='achievementwall.html'">
+          <h3>🌟 Achievement Wall</h3>
+          <p>Showcase your projects, certificates and personal achievements.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.href='lifeskills.html'">
+          <h3>🎯 LifeSkills Simulator</h3>
+          <p>Practise real-life skills through fun interactive activities.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const savedProfile = JSON.parse(
+    localStorage.getItem("studentProfile")
+);
+
+if (savedProfile) {
+    document.getElementById("welcomeStudent").innerText =
+        "Welcome, " + savedProfile.name + "! 👋";
+
+    document.getElementById("studentInfo").innerText =
+        savedProfile.board + " | Class " + savedProfile.className;
+}
+    function loadDashboardProgress() {
+
+      const challengeData = JSON.parse(
+        localStorage.getItem("studentChallengeArena")
+      ) || { score: 0 };
+
+      const achievements = JSON.parse(
+        localStorage.getItem("studentAchievements")
+      ) || [];
+
+      document.getElementById("dashboardScore").innerText =
+        challengeData.score || 0;
+
+      document.getElementById("dashboardAchievements").innerText =
+        Array.isArray(achievements) ? achievements.length : 0;
+    }
+
+    loadDashboardProgress();
+  </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("StudentVerse is ready!"))
+      .catch(error => console.log("Service Worker error:", error));
+  });
+}
+</script>  
+
+</body>
+</html>

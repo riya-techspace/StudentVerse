@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartStudy | StudentVerse</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .study-text {
+      white-space: pre-line;
+      line-height: 1.8;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 15px;
+    }
+    .back-btn {
+      margin: 12px 5px;
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #7653d6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="logo">✦ StudentVerse</div>
+    <nav><a href="index.html">Home</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to <span>SmartStudy</span></h1>
+    <p>Your learning journey starts here. Choose your board, class and subject.</p>
+  </section>
+
+  <section class="features">
+
+    <div id="selectionSection">
+      <h2 id="mainHeading">Choose Your Board</h2>
+      <p id="mainDescription">Select your board to continue.</p>
+
+      <div class="feature-grid" id="boardGrid">
+        <div class="feature-card" onclick="selectBoard('CBSE')">
+          <h3>CBSE</h3>
+          <p>Explore CBSE learning resources.</p>
+        </div>
+        <div class="feature-card" onclick="selectBoard('ICSE/ISC')">
+          <h3>ICSE / ISC</h3>
+          <p>Explore CISCE learning resources.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid" id="classGrid" style="display:none;"></div>
+
+      <div id="subjectSection" style="display:none;">
+        <div class="feature-grid" id="subjectGrid"></div>
+      </div>
+
+      <div id="chapterSection" style="display:none;">
+        <h2 id="chapterHeading">Choose Your Chapter</h2>
+        <div class="feature-grid" id="chapterGrid"></div>
+      </div>
+    </div>
+
+    <div id="chapterContent" style="display:none;">
+      <h2 id="contentHeading"></h2>
+      <p>Choose a learning section:</p>
+
+      <div class="feature-grid" id="contentOptions">
+        <div class="feature-card" onclick="showStudyContent('overview')">
+          <h3>📖 Chapter Overview</h3>
+          <p>Understand the chapter basics.</p>
+        </div>
+
+        <div class="feature-card" onclick="showStudyContent('notes')">
+          <h3>📝 Detailed Notes</h3>
+          <p>Explore important concepts.</p>
+        </div>
+
+        <div class="feature-card" onclick="showStudyContent('formulas')">
+          <h3>📐 Important Formulas</h3>
+          <p>Revise key formulas.</p>
+        </div>
+
+        <div class="feature-card" onclick="showStudyContent('examples')">
+          <h3>💡 Solved Examples</h3>
+          <p>Learn through examples.</p>
+        </div>
+
+        <div class="feature-card" onclick="showStudyContent('practice')">
+          <h3>🎯 Practice Questions</h3>
+          <p>Test your understanding.</p>
+        </div>
+      </div>
+
+      <div id="studyContent" style="display:none;">
+        <h3 id="studyTitle"></h3>
+        <div class="study-text" id="studyDescription"></div>
+        <button class="back-btn" onclick="backToOptions()">← Back to Learning Sections</button>
+      </div>
+    </div>
+
+    <button class="back-btn" id="backBtn" style="display:none;" onclick="goBack()">← Back</button>
+
+  </section>
+</div>
+
+<script>
+let selectedBoard = "";
+let selectedClass = "";
+let selectedSubject = "";
+let selectedChapter = "";
+
+const subjectLists = {
+  "CBSE": {
+    junior: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Computer"],
+    middle: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Computer Applications"],
+    senior: ["English", "Physics", "Chemistry", "Mathematics", "Biology", "Accountancy", "Business Studies", "Economics", "Computer Science"]
+  },
+  "ICSE/ISC": {
+    junior: ["English", "Second Language", "Mathematics", "Science", "History & Civics", "Geography", "Computer Studies"],
+    middle: ["English", "Second Language", "Mathematics", "Physics", "Chemistry", "Biology", "History & Civics", "Geography", "Computer Applications"],
+    senior: ["English", "Physics", "Chemistry", "Mathematics", "Biology", "Accountancy", "Economics", "History", "Computer Science"]
+  }
+};
+
+const physicsChapters = [
+  "1. Units and Measurements",
+  "2. Motion in a Straight Line",
+  "3. Motion in a Plane",
+  "4. Laws of Motion",
+  "5. Work, Energy and Power",
+  "6. System of Particles and Rotational Motion",
+  "7. Gravitation",
+  "8. Mechanical Properties of Solids",
+  "9. Mechanical Properties of Fluids",
+  "10. Thermal Properties of Matter",
+  "11. Thermodynamics",
+  "12. Kinetic Theory",
+  "13. Oscillations",
+  "14. Waves"
+];
+
+function showElement(id) {
+  document.getElementById(id).style.display = "block";
+}
+
+function hideElement(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+function selectBoard(board) {
+  selectedBoard = board;
+  hideElement("boardGrid");
+  showElement("classGrid");
+  showElement("backBtn");
+
+  document.getElementById("mainHeading").textContent =
+    board + " - Choose Your Class";
+  document.getElementById("mainDescription").textContent =
+    "Select your class to continue.";
+
+  const grid = document.getElementById("classGrid");
+  grid.innerHTML = "";
+
+  for (let i = 6; i <= 12; i++) {
+    const card = document.createElement("div");
+    card.className = "feature-card";
+    card.innerHTML = "<h3>Class " + i + "</h3>";
+    card.onclick = () => selectClass(String(i));
+    grid.appendChild(card);
+  }
+}
+
+function selectClass(className) {
+  selectedClass = className;
+  hideElement("classGrid");
+  showElement("subjectSection");
+
+  document.getElementById("mainHeading").textContent =
+    selectedBoard + " - Class " + selectedClass + " Subjects";
+  document.getElementById("mainDescription").textContent =
+    "Select a subject to explore its chapters.";
+
+  let group = className <= 8 ? "junior" :
+              className <= 10 ? "middle" : "senior";
+
+  const subjects = subjectLists[selectedBoard][group];
+  const grid = document.getElementById("subjectGrid");
+  grid.innerHTML = "";
+
+  subjects.forEach(subject => {
+    const card = document.createElement("div");
+    card.className = "feature-card";
+    card.innerHTML = "<h3>" + subject + "</h3>";
+    card.onclick = () => selectSubject(subject);
+    grid.appendChild(card);
+  });
+}
+
+function selectSubject(subject) {
+  selectedSubject = subject;
+  hideElement("subjectSection");
+  showElement("chapterSection");
+
+  document.getElementById("mainHeading").textContent =
+    selectedSubject + " Chapters";
+
+  let chapters = [];
+
+  if (selectedBoard === "CBSE" &&
+      selectedClass === "11" &&
+      selectedSubject === "Physics") {
+    chapters = physicsChapters;
+  } else {
+    for (let i = 1; i <= 10; i++) {
+      chapters.push("Chapter " + i);
+    }
+  }
+
+  document.getElementById("chapterHeading").textContent =
+    selectedBoard + " Class " + selectedClass + " " +
+    selectedSubject + " - Choose Your Chapter";
+
+  const grid = document.getElementById("chapterGrid");
+  grid.innerHTML = "";
+
+  chapters.forEach(chapter => {
+    const card = document.createElement("div");
+    card.className = "feature-card";
+    card.innerHTML = "<h3>" + chapter + "</h3>";
+    card.onclick = () => selectChapter(chapter);
+    grid.appendChild(card);
+  });
+}
+
+function selectChapter(chapter) {
+  selectedChapter = chapter;
+  hideElement("chapterSection");
+  hideElement("selectionSection");
+  showElement("chapterContent");
+
+  document.getElementById("contentHeading").textContent =
+    selectedSubject + " - " + selectedChapter;
+}
+
+function showStudyContent(type) {
+  hideElement("contentOptions");
+  showElement("studyContent");
+
+  const title = document.getElementById("studyTitle");
+  const description = document.getElementById("studyDescription");
+
+  const isPhysicsFirstChapter =
+    selectedBoard === "CBSE" &&
+    selectedClass === "11" &&
+    selectedSubject === "Physics" &&
+    selectedChapter.includes("Units and Measurements");
+
+  const content = {
+    overview: {
+      title: "Chapter Overview",
+      text: "You are studying " + selectedChapter + " in " +
+        selectedBoard + " Class " + selectedClass + " " +
+        selectedSubject + ".\n\nThis section will introduce the main ideas, key concepts and learning objectives of this chapter."
+    },
+    notes: {
+      title: "Detailed Notes",
+      text: "Study Notes: " + selectedChapter +
+        "\n\nUse this section to revise definitions, important concepts, explanations and key points.\n\nDetailed board-wise notes will be added in the content development stage."
+    },
+    formulas: {
+      title: "Important Formulas",
+      text: isPhysicsFirstChapter
+        ? "Mean Value:\na(mean) = (a1 + a2 + ... + an) / n\n\nAbsolute Error:\nΔa = |Measured Value - Mean Value|\n\nRelative Error:\nRelative Error = Mean Absolute Error / Mean Value\n\nPercentage Error:\nPercentage Error = Relative Error × 100"
+        : "Formula sheet for " + selectedChapter +
+          "\n\nChapter-specific formulas will be added here where applicable."
+    },
+    examples: {
+      title: "Solved Examples",
+      text: "Solved Examples: " + selectedChapter +
+        "\n\nStep-by-step examples and solutions will be added here for this chapter."
+    },
+    practice: {
+      title: "Practice Questions",
+      text: "Practice: " + selectedChapter +
+        "\n\n1. What is the main concept of this chapter?\n\n2. Write two important points you learned.\n\n3. Which topic from this chapter would you like to revise?\n\nChapter-specific MCQs and answer keys will be added here."
+    }
+  };
+
+  title.textContent = content[type].title;
+  description.textContent = content[type].text;
+}
+
+function backToOptions() {
+  hideElement("studyContent");
+  showElement("contentOptions");
+}
+
+function goBack() {
+  if (document.getElementById("chapterContent").style.display === "block") {
+    hideElement("chapterContent");
+    showElement("selectionSection");
+    showElement("chapterSection");
+    return;
+  }
+
+  if (document.getElementById("chapterSection").style.display === "block") {
+    hideElement("chapterSection");
+    showElement("subjectSection");
+    document.getElementById("mainHeading").textContent =
+      selectedBoard + " - Class " + selectedClass + " Subjects";
+    return;
+  }
+
+  if (document.getElementById("subjectSection").style.display === "block") {
+    hideElement("subjectSection");
+    showElement("classGrid");
+    document.getElementById("mainHeading").textContent =
+      selectedBoard + " - Choose Your Class";
+    return;
+  }
+
+  if (document.getElementById("classGrid").style.display === "grid") {
+    hideElement("classGrid");
+    showElement("boardGrid");
+    document.getElementById("mainHeading").textContent = "Choose Your Board";
+    document.getElementById("mainDescription").textContent =
+      "Select your board to continue.";
+    hideElement("backBtn");
+  }
+}
+</script>
+
+</body>
+</html>

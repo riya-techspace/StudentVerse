@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutureFinder | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>🔮 StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>FutureFinder</h1>
+    <p>Discover your interests. Explore your future.</p>
+</section>
+
+<section class="features-grid">
+
+    <div class="feature-card">
+        <h2>🧭 Career Explorer</h2>
+        <select id="careerSelect">
+            <option value="">Choose a career</option>
+            <option value="doctor">Doctor</option>
+            <option value="engineer">Engineer</option>
+            <option value="designer">Designer</option>
+            <option value="teacher">Teacher</option>
+            <option value="scientist">Scientist</option>
+            <option value="entrepreneur">Entrepreneur</option>
+        </select>
+        <button onclick="exploreCareer()">Explore</button>
+        <p id="careerResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>💡 Interest Discovery</h2>
+        <p>What do you enjoy doing most?</p>
+        <select id="interestSelect">
+            <option value="">Choose your interest</option>
+            <option value="science">Understanding science</option>
+            <option value="technology">Building with technology</option>
+            <option value="art">Creating art and designs</option>
+            <option value="people">Helping people</option>
+            <option value="business">Business and leadership</option>
+        </select>
+        <button onclick="discoverInterest()">Discover</button>
+        <p id="interestResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>🎓 Courses & Degrees</h2>
+        <p>Explore educational pathways.</p>
+        <select id="courseSelect">
+            <option value="">Choose a field</option>
+            <option value="medical">Medical</option>
+            <option value="engineering">Engineering</option>
+            <option value="design">Design</option>
+            <option value="commerce">Commerce</option>
+            <option value="humanities">Humanities</option>
+        </select>
+        <button onclick="exploreCourse()">Explore Courses</button>
+        <p id="courseResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>🛠️ Skills Explorer</h2>
+        <p>Explore useful skills for your future.</p>
+        <button onclick="showSkills()">Explore Skills</button>
+        <p id="skillsResult"></p>
+    </div>
+
+</section>
+
+<script>
+
+const careers = {
+    doctor: "Explore biology, healthcare, medical studies and patient care. A common pathway is MBBS followed by further training.",
+    engineer: "Explore mathematics, physics, technology and problem-solving. Engineering offers many branches.",
+    designer: "Explore creativity, visual communication, design tools and portfolio building.",
+    teacher: "Explore subject knowledge, communication, education and mentoring.",
+    scientist: "Explore scientific thinking, experiments, mathematics and research.",
+    entrepreneur: "Explore business ideas, communication, financial literacy and leadership."
+};
+
+const interests = {
+    science: "You may enjoy exploring science, research, healthcare or environmental studies.",
+    technology: "You may enjoy exploring computer science, software, engineering or robotics.",
+    art: "You may enjoy exploring graphic design, animation, architecture or creative arts.",
+    people: "You may enjoy exploring education, psychology, healthcare or social work.",
+    business: "You may enjoy exploring management, economics, entrepreneurship or finance."
+};
+
+const courses = {
+    medical: "Possible pathways: MBBS, BDS, BSc Nursing, Physiotherapy and other healthcare courses.",
+    engineering: "Possible pathways: BTech, BE, BCA, BSc Computer Science and related programmes.",
+    design: "Possible pathways: BDes, communication design, animation and product design.",
+    commerce: "Possible pathways: BCom, BBA, Economics, CA and related programmes.",
+    humanities: "Possible pathways: BA programmes, law, psychology, journalism and social sciences."
+};
+
+function exploreCareer() {
+    let choice = document.getElementById("careerSelect").value;
+    document.getElementById("careerResult").innerText =
+        careers[choice] || "Please choose a career first.";
+}
+
+function discoverInterest() {
+    let choice = document.getElementById("interestSelect").value;
+    document.getElementById("interestResult").innerText =
+        interests[choice] || "Please select an interest first.";
+}
+
+function exploreCourse() {
+    let choice = document.getElementById("courseSelect").value;
+    document.getElementById("courseResult").innerText =
+        courses[choice] || "Please choose a field first.";
+}
+
+function showSkills() {
+    document.getElementById("skillsResult").innerText =
+        "Useful skills include communication, critical thinking, creativity, digital literacy, teamwork and problem-solving.";
+}
+
+</script>
+
+</body>
+</html>

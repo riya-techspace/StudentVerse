@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeSkills Simulator | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>🌟 StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>LifeSkills Simulator</h1>
+    <p>Learn practical skills for everyday life.</p>
+</section>
+
+<section class="feature-card">
+    <h2>💰 Budget Simulator</h2>
+    <input type="number" id="budget" placeholder="Enter your monthly budget">
+    <input type="number" id="expenses" placeholder="Enter total expenses">
+    <button onclick="calculateBudget()">Calculate Balance</button>
+    <p id="budgetResult"></p>
+</section>
+
+<section class="feature-card">
+    <h2>⏰ Time Management</h2>
+    <input type="text" id="taskName" placeholder="Enter a task">
+    <input type="number" id="taskTime" placeholder="Time in minutes">
+    <button onclick="addTask()">Add Task</button>
+    <div id="taskList"></div>
+    <p id="totalTime">Total planned time: 0 minutes</p>
+</section>
+
+<section class="feature-card">
+    <h2>🎤 Interview Practice</h2>
+    <p id="interviewQuestion">Tell me about yourself.</p>
+    <textarea id="interviewAnswer" placeholder="Write your answer here"></textarea>
+    <button onclick="showInterviewTip()">Get Guidance</button>
+    <p id="interviewTip"></p>
+    <button onclick="nextQuestion()">Next Question</button>
+</section>
+
+<section class="feature-card">
+    <h2>💬 Communication Skills</h2>
+    <p>A classmate disagrees with your idea during a group project. What would you do?</p>
+    <button onclick="communicationChoice(1)">Listen to their point of view</button>
+    <button onclick="communicationChoice(2)">Interrupt and argue</button>
+    <button onclick="communicationChoice(3)">Ignore them</button>
+    <p id="communicationResult"></p>
+</section>
+
+<section class="feature-card">
+    <h2>🧠 Decision Making</h2>
+    <p>You have an assignment due tomorrow, but your friends invite you to play. What is a sensible choice?</p>
+    <button onclick="decisionChoice(1)">Finish the assignment first, then make time to play</button>
+    <button onclick="decisionChoice(2)">Ignore the assignment</button>
+    <button onclick="decisionChoice(3)">Panic and do nothing</button>
+    <p id="decisionResult"></p>
+</section>
+
+<section class="feature-card">
+    <h2>🔐 Digital Safety Quiz</h2>
+    <p>Someone online asks you to share your password or OTP. What should you do?</p>
+    <button onclick="safetyChoice(1)">Share it with them</button>
+    <button onclick="safetyChoice(2)">Never share it and tell a trusted adult if needed</button>
+    <button onclick="safetyChoice(3)">Post it publicly</button>
+    <p id="safetyResult"></p>
+</section>
+
+<script>
+
+function calculateBudget() {
+    let budget = Number(document.getElementById("budget").value);
+    let expenses = Number(document.getElementById("expenses").value);
+    let result = document.getElementById("budgetResult");
+
+    if (document.getElementById("budget").value === "" ||
+        document.getElementById("expenses").value === "" ||
+        budget < 0 || expenses < 0) {
+        result.textContent = "Please enter valid amounts.";
+        return;
+    }
+
+    let balance = budget - expenses;
+    result.textContent = "Remaining balance: " + balance;
+}
+
+let tasks = [];
+
+function addTask() {
+    let name = document.getElementById("taskName").value.trim();
+    let time = Number(document.getElementById("taskTime").value);
+
+    if (name === "" || document.getElementById("taskTime").value === "" || time <= 0) {
+        alert("Enter a task and valid time.");
+        return;
+    }
+
+    tasks.push({name: name, time: time});
+    document.getElementById("taskName").value = "";
+    document.getElementById("taskTime").value = "";
+    displayTasks();
+}
+
+function displayTasks() {
+    let list = document.getElementById("taskList");
+    list.innerHTML = "";
+    let total = 0;
+
+    tasks.forEach(function(task, index) {
+        total += task.time;
+
+        let item = document.createElement("p");
+        item.textContent = task.name + " — " + task.time + " minutes ";
+
+        let remove = document.createElement("button");
+        remove.textContent = "Remove";
+        remove.onclick = function() {
+            tasks.splice(index, 1);
+            displayTasks();
+        };
+
+        item.appendChild(remove);
+        list.appendChild(item);
+    });
+
+    document.getElementById("totalTime").textContent =
+        "Total planned time: " + total + " minutes";
+}
+
+let questions = [
+    "Tell me about yourself.",
+    "What are your strengths?",
+    "How do you handle a difficult situation?",
+    "Why are you interested in this opportunity?"
+];
+
+let questionIndex = 0;
+
+function showInterviewTip() {
+    let answer = document.getElementById("interviewAnswer").value.trim();
+
+    if (answer === "") {
+        document.getElementById("interviewTip").textContent =
+            "Write an answer first.";
+        return;
+    }
+
+    document.getElementById("interviewTip").textContent =
+        "Good practice! Keep your answer clear, relevant and supported by an example.";
+}
+
+function nextQuestion() {
+    questionIndex = (questionIndex + 1) % questions.length;
+    document.getElementById("interviewQuestion").textContent =
+        questions[questionIndex];
+    document.getElementById("interviewAnswer").value = "";
+    document.getElementById("interviewTip").textContent = "";
+}
+
+function communicationChoice(choice) {
+    let result = document.getElementById("communicationResult");
+
+    if (choice === 1) {
+        result.textContent = "Good choice! Listening respectfully helps teamwork.";
+    } else {
+        result.textContent = "Try listening first and discussing your ideas calmly.";
+    }
+}
+
+function decisionChoice(choice) {
+    let result = document.getElementById("decisionResult");
+
+    if (choice === 1) {
+        result.textContent = "Good decision! Planning helps you balance responsibilities and free time.";
+    } else {
+        result.textContent = "Think about your deadline and choose a balanced plan.";
+    }
+}
+
+function safetyChoice(choice) {
+    let result = document.getElementById("safetyResult");
+
+    if (choice === 2) {
+        result.textContent = "Correct! Keep passwords and OTPs private.";
+    } else {
+        result.textContent = "Incorrect. Never share passwords or OTPs with anyone.";
+    }
+}
+
+</script>
+
+</body>
+</html>

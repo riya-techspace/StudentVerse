@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>✦ StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>My Student Profile</h1>
+    <p>Create your personal learning identity.</p>
+</section>
+
+<section class="feature-card" style="max-width:600px;margin:30px auto;">
+
+    <h2>👤 Student Details</h2>
+
+    <label>Student Name</label>
+    <input type="text" id="studentName" placeholder="Enter your name">
+
+    <br><br>
+
+    <label>Select Board</label>
+    <select id="studentBoard">
+        <option value="">Choose Board</option>
+        <option value="CBSE">CBSE</option>
+        <option value="ICSE/ISC">ICSE / ISC</option>
+    </select>
+
+    <br><br>
+
+    <label>Select Class</label>
+    <select id="studentClass">
+        <option value="">Choose Class</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        <option>11</option>
+        <option>12</option>
+    </select>
+
+    <br><br>
+
+    <label>Favourite Subjects</label>
+    <input type="text" id="studentSubjects" placeholder="e.g. Physics, Maths">
+
+    <br><br>
+
+    <label>Learning Goals</label>
+    <textarea id="studentGoals" placeholder="What do you want to achieve?"></textarea>
+
+    <br><br>
+
+    <button onclick="saveProfile()">Save My Profile</button>
+
+    <p id="profileMessage"></p>
+
+</section>
+
+<script>
+
+function saveProfile() {
+
+    const profile = {
+        name: document.getElementById("studentName").value.trim(),
+        board: document.getElementById("studentBoard").value,
+        className: document.getElementById("studentClass").value,
+        subjects: document.getElementById("studentSubjects").value.trim(),
+        goals: document.getElementById("studentGoals").value.trim()
+    };
+
+    if (!profile.name || !profile.board || !profile.className) {
+        document.getElementById("profileMessage").innerText =
+            "Please enter your name, board and class.";
+        return;
+    }
+
+    localStorage.setItem("studentProfile", JSON.stringify(profile));
+
+    document.getElementById("profileMessage").innerText =
+        "Profile saved successfully! 🎉";
+}
+
+function loadProfile() {
+
+    const profile = JSON.parse(
+        localStorage.getItem("studentProfile")
+    );
+
+    if (!profile) return;
+
+    document.getElementById("studentName").value = profile.name || "";
+    document.getElementById("studentBoard").value = profile.board || "";
+    document.getElementById("studentClass").value = profile.className || "";
+    document.getElementById("studentSubjects").value = profile.subjects || "";
+    document.getElementById("studentGoals").value = profile.goals || "";
+}
+
+loadProfile();
+
+</script>
+
+</body>
+</html>

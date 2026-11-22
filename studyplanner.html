@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Planner | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>📚 StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>Smart Study Planner</h1>
+    <p>Create your personal study timetable.</p>
+</section>
+
+<section class="features-grid">
+
+    <div class="feature-card">
+        <h2>📖 Add Subjects</h2>
+        <input type="text" id="subjectInput" placeholder="Enter subject">
+        <button onclick="addSubject()">Add Subject</button>
+        <ul id="subjectList"></ul>
+    </div>
+
+    <div class="feature-card">
+        <h2>⏰ Daily Study Hours</h2>
+        <input type="number" id="hoursInput" placeholder="Hours per day" min="1" max="16">
+    </div>
+
+    <div class="feature-card">
+        <h2>📅 Exam Date</h2>
+        <input type="date" id="examDate">
+    </div>
+
+    <div class="feature-card">
+        <h2>📝 Pending Chapters</h2>
+        <p>Write one chapter per line.</p>
+        <textarea id="chaptersInput" placeholder="Physics - Motion&#10;Chemistry - Atomic Structure&#10;Maths - Trigonometry"></textarea>
+    </div>
+
+</section>
+
+<section style="text-align:center; margin:30px;">
+    <button onclick="generatePlan()">✨ Generate My Study Plan</button>
+</section>
+
+<section id="planSection" style="display:none; margin:20px;">
+    <h2>🎯 Your Personal Study Plan</h2>
+    <div id="planSummary" class="feature-card"></div>
+    <h2>📅 Daily Timetable</h2>
+    <div id="planResult"></div>
+    <h2>📝 Pending Chapter Checklist</h2>
+    <div id="chapterResult" class="feature-card"></div>
+    <button onclick="savePlan()">💾 Save My Plan</button>
+    <button onclick="loadPlan()">📂 Load Saved Plan</button>
+</section>
+
+<script>
+
+let subjects = [];
+let generatedPlan = null;
+
+function addSubject() {
+    let input = document.getElementById("subjectInput");
+    let subject = input.value.trim();
+
+    if (!subject) {
+        alert("Please enter a subject!");
+        return;
+    }
+
+    if (subjects.some(s => s.toLowerCase() === subject.toLowerCase())) {
+        alert("Subject already added!");
+        return;
+    }
+
+    subjects.push(subject);
+    input.value = "";
+    displaySubjects();
+}
+
+function displaySubjects() {
+    let list = document.getElementById("subjectList");
+    list.innerHTML = "";
+
+    subjects.forEach((subject, index) => {
+        let item = document.createElement("li");
+        item.textContent = subject + " ";
+
+        let remove = document.createElement("button");
+        remove.textContent = "Remove";
+        remove.onclick = function() {
+            subjects.splice(index, 1);
+            displaySubjects();
+        };
+
+        item.appendChild(remove);
+        list.appendChild(item);
+    });
+}
+
+function generatePlan() {
+    let hours = Number(document.getElementById("hoursInput").value);
+    let examDate = document.getElementById("examDate").value;
+    let chapterText = document.getElementById("chaptersInput").value.trim();
+
+    if (subjects.length === 0) {
+        alert("Please add at least one subject!");
+        return;
+    }
+
+    if (!hours || hours < 1 || hours > 16) {
+        alert("Enter daily study hours between 1 and 16!");
+        return;
+    }
+
+    if (!examDate) {
+        alert("Please select your exam date!");
+        return;
+    }
+
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let exam = new Date(examDate + "T00:00:00");
+    let daysLeft = Math.ceil((exam - today) / 86400000);
+
+    if (daysLeft < 0) {
+        alert("Please select today or a future exam date!");
+        return;
+    }
+
+    let chapters = chapterText
+        .split("\n")
+        .map(chapter => chapter.trim())
+        .filter(chapter => chapter !== "");
+
+    let dailyMinutes = hours * 60;
+    let revisionMinutes = Math.min(30, Math.floor(dailyMinutes * 0.15));
+    let studyMinutes = dailyMinutes - revisionMinutes;
+
+    let baseTime = Math.floor(studyMinutes / subjects.length);
+    let extraTime = studyMinutes % subjects.length;
+
+    let subjectTimes = subjects.map((subject, index) => ({
+        name: subject,
+        minutes: baseTime + (index < extraTime ? 1 : 0)
+    }));
+
+    let schedule = [];
+
+    for (let day = 0; day < Math.max(daysLeft, 1); day++) {
+        let dailySubjects = [];
+
+        for (let i = 0; i < subjectTimes.length; i++) {
+            let subjectIndex = (i + day) % subjectTimes.length;
+            dailySubjects.push(subjectTimes[subjectIndex]);
+        }
+
+        schedule.push({
+            day: day + 1,
+            subjects: dailySubjects
+        });
+    }
+
+    generatedPlan = {
+        hours: hours,
+        examDate: examDate,
+        daysLeft: daysLeft,
+        subjects: subjectTimes,
+        chapters: chapters,
+        schedule: schedule,
+        revisionMinutes: revisionMinutes
+    };
+
+    displayPlan();
+}
+
+function displayPlan() {
+    if (!generatedPlan) return;
+
+    let summary = document.getElementById("planSummary");
+    summary.innerHTML = "";
+
+    let details = [
+        "📅 Exam Date: " + generatedPlan.examDate,
+        "⏳ Days Until Exam: " + generatedPlan.daysLeft,
+        "📚 Subjects: " + generatedPlan.subjects.length,
+        "⏰ Daily Study Time: " + generatedPlan.hours + " hours",
+        "🔄 Daily Revision Time: " + generatedPlan.revisionMinutes + " minutes"
+    ];
+
+    details.forEach(detail => {
+        let p = document.createElement("p");
+        p.textContent = detail;
+        summary.appendChild(p);
+    });
+
+    let result = document.getElementById("planResult");
+    result.innerHTML = "";
+
+    let totalDaysToShow = Math.min(generatedPlan.schedule.length, 7);
+
+    for (let i = 0; i < totalDaysToShow; i++) {
+        let day = generatedPlan.schedule[i];
+
+        let card = document.createElement("div");
+        card.className = "feature-card";
+
+        let heading = document.createElement("h3");
+        heading.textContent = "Day " + day.day;
+        card.appendChild(heading);
+
+        day.subjects.forEach(subject => {
+            let p = document.createElement("p");
+            p.textContent = subject.name + " — " +
+                Math.floor(subject.minutes / 60) + " hr " +
+                (subject.minutes % 60) + " min";
+            card.appendChild(p);
+        });
+
+        let revision = document.createElement("p");
+        revision.textContent = "🔄 Revision: " +
+            generatedPlan.revisionMinutes + " minutes";
+        card.appendChild(revision);
+
+        result.appendChild(card);
+    }
+
+    if (generatedPlan.schedule.length > 7) {
+        let note = document.createElement("p");
+        note.textContent = "Showing the first 7 days of your timetable. Your saved plan includes the complete schedule.";
+        result.appendChild(note);
+    }
+
+    let chapterResult = document.getElementById("chapterResult");
+    chapterResult.innerHTML = "";
+
+    if (generatedPlan.chapters.length === 0) {
+        chapterResult.textContent = "No pending chapters added.";
+    } else {
+        generatedPlan.chapters.forEach(chapter => {
+            let label = document.createElement("label");
+            label.style.display = "block";
+            label.style.margin = "10px 0";
+
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(" " + chapter));
+            chapterResult.appendChild(label);
+        });
+    }
+
+    document.getElementById("planSection").style.display = "block";
+}
+
+function savePlan() {
+    if (!generatedPlan) {
+        alert("Generate a plan first!");
+        return;
+    }
+
+    let checkedChapters = Array.from(
+        document.querySelectorAll("#chapterResult input:checked")
+    ).map(box => box.parentElement.textContent.trim());
+
+    generatedPlan.completedChapters = checkedChapters;
+
+    localStorage.setItem(
+        "studentStudyPlan",
+        JSON.stringify(generatedPlan)
+    );
+
+    alert("Your study plan has been saved!");
+}
+
+function loadPlan() {
+    let saved = localStorage.getItem("studentStudyPlan");
+
+    if (!saved) {
+        alert("No saved study plan found!");
+        return;
+    }
+
+    generatedPlan = JSON.parse(saved);
+    subjects = generatedPlan.subjects.map(s => s.name);
+
+    document.getElementById("hoursInput").value = generatedPlan.hours;
+    document.getElementById("examDate").value = generatedPlan.examDate;
+    document.getElementById("chaptersInput").value =
+        generatedPlan.chapters.join("\n");
+
+    displaySubjects();
+    displayPlan();
+
+    let completed = generatedPlan.completedChapters || [];
+
+    document.querySelectorAll("#chapterResult input").forEach(box => {
+        let name = box.parentElement.textContent.trim();
+        box.checked = completed.includes(name);
+    });
+}
+
+</script>
+
+</body>
+</html>

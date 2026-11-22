@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achievement Wall | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>🏆 StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>Achievement Wall</h1>
+    <p>Celebrate your progress. Every achievement matters.</p>
+</section>
+
+<section class="feature-card">
+    <h2>➕ Add New Achievement</h2>
+
+    <input type="text" id="achievementTitle"
+    placeholder="Achievement title">
+
+    <select id="achievementType">
+        <option value="Certificate">Certificate</option>
+        <option value="Project">Project</option>
+        <option value="Award">Award</option>
+        <option value="Milestone">Learning Milestone</option>
+    </select>
+
+    <textarea id="achievementDescription"
+    placeholder="Write a short description"></textarea>
+
+    <button onclick="addAchievement()">Save Achievement</button>
+</section>
+
+<section style="margin:25px;">
+    <h2>🌟 My Achievements</h2>
+    <div id="achievementList"></div>
+</section>
+
+<script>
+
+let achievements = JSON.parse(
+    localStorage.getItem("studentAchievements") || "[]"
+);
+
+function displayAchievements() {
+    let list = document.getElementById("achievementList");
+    list.innerHTML = "";
+
+    if (achievements.length === 0) {
+        list.innerHTML = "<p>No achievements added yet.</p>";
+        return;
+    }
+
+    achievements.forEach((item, index) => {
+        let card = document.createElement("div");
+        card.className = "feature-card";
+
+        let title = document.createElement("h3");
+        title.textContent = item.title;
+
+        let type = document.createElement("p");
+        type.textContent = "Category: " + item.type;
+
+        let description = document.createElement("p");
+        description.textContent = item.description;
+
+        let date = document.createElement("p");
+        date.textContent = "Added: " + item.date;
+
+        let remove = document.createElement("button");
+        remove.textContent = "Delete";
+        remove.onclick = function() {
+            deleteAchievement(index);
+        };
+
+        card.append(title, type, description, date, remove);
+        list.appendChild(card);
+    });
+}
+
+function addAchievement() {
+    let title = document.getElementById("achievementTitle").value.trim();
+    let type = document.getElementById("achievementType").value;
+    let description = document.getElementById("achievementDescription").value.trim();
+
+    if (title === "") {
+        alert("Please enter an achievement title!");
+        return;
+    }
+
+    achievements.push({
+        title: title,
+        type: type,
+        description: description,
+        date: new Date().toLocaleDateString()
+    });
+
+    localStorage.setItem(
+        "studentAchievements",
+        JSON.stringify(achievements)
+    );
+
+    document.getElementById("achievementTitle").value = "";
+    document.getElementById("achievementDescription").value = "";
+
+    displayAchievements();
+    alert("Achievement saved successfully!");
+}
+
+function deleteAchievement(index) {
+    achievements.splice(index, 1);
+
+    localStorage.setItem(
+        "studentAchievements",
+        JSON.stringify(achievements)
+    );
+
+    displayAchievements();
+}
+
+displayAchievements();
+
+</script>
+
+</body>
+</html>

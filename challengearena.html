@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Challenge Arena | StudentVerse</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>🧠 StudentVerse</h2>
+    <a href="index.html">Home</a>
+</header>
+
+<section class="hero">
+    <h1>Challenge Arena</h1>
+    <p>Think beyond limits. Take a challenge. Build your skills.</p>
+</section>
+
+<section class="features-grid">
+
+    <div class="feature-card">
+        <h2>🧩 Brain Teaser</h2>
+        <p>What has keys but cannot open locks?</p>
+        <input type="text" id="brainAnswer" placeholder="Your answer">
+        <button id="brainButton" onclick="checkBrain()">Submit</button>
+        <p id="brainResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>🔢 Math Challenge</h2>
+        <p>What is 15 × 8?</p>
+        <input type="number" id="mathAnswer" placeholder="Your answer">
+        <button id="mathButton" onclick="checkMath()">Submit</button>
+        <p id="mathResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>🎨 Creativity Challenge</h2>
+        <p>Write one creative idea to reduce plastic waste.</p>
+        <textarea id="creativeAnswer" placeholder="Write your idea"></textarea>
+        <button id="creativeButton" onclick="checkCreative()">Submit Idea</button>
+        <p id="creativeResult"></p>
+    </div>
+
+    <div class="feature-card">
+        <h2>🌍 General Knowledge</h2>
+        <p>Which planet is known as the Red Planet?</p>
+        <select id="gkAnswer">
+            <option value="">Choose an answer</option>
+            <option value="Earth">Earth</option>
+            <option value="Mars">Mars</option>
+            <option value="Venus">Venus</option>
+            <option value="Jupiter">Jupiter</option>
+        </select>
+        <button id="gkButton" onclick="checkGK()">Submit</button>
+        <p id="gkResult"></p>
+    </div>
+
+</section>
+
+<section class="hero">
+    <h2>🏅 My Challenge Score</h2>
+    <h1 id="score">0</h1>
+    <p>Points earned from completed challenges</p>
+    <p id="completionMessage"></p>
+</section>
+
+<script>
+
+const storageKey = "studentChallengeArena";
+
+let savedData = JSON.parse(localStorage.getItem(storageKey)) || {
+    score: 0,
+    completed: []
+};
+
+let score = savedData.score;
+let completed = savedData.completed;
+
+function updateScore() {
+    document.getElementById("score").innerText = score;
+
+    document.getElementById("completionMessage").innerText =
+        completed.length + " out of 4 challenges completed";
+
+    localStorage.setItem(storageKey, JSON.stringify({
+        score: score,
+        completed: completed
+    }));
+}
+
+function completeChallenge(id, resultId, buttonId, message) {
+
+    if (completed.includes(id)) {
+        return;
+    }
+
+    score += 10;
+    completed.push(id);
+
+    document.getElementById(resultId).innerText = message;
+    document.getElementById(buttonId).disabled = true;
+
+    updateScore();
+}
+
+function checkBrain() {
+    let answer = document.getElementById("brainAnswer").value.trim().toLowerCase();
+
+    if (answer === "piano") {
+        completeChallenge("brain", "brainResult", "brainButton",
+            "Correct! +10 points 🎉");
+    } else {
+        document.getElementById("brainResult").innerText =
+            "Try again! Think of a musical instrument.";
+    }
+}
+
+function checkMath() {
+    let answer = document.getElementById("mathAnswer").value;
+
+    if (answer === "120") {
+        completeChallenge("math", "mathResult", "mathButton",
+            "Correct! +10 points 🎉");
+    } else {
+        document.getElementById("mathResult").innerText =
+            "Not quite! Try again.";
+    }
+}
+
+function checkCreative() {
+    let answer = document.getElementById("creativeAnswer").value.trim();
+
+    if (answer.length >= 10) {
+        completeChallenge("creative", "creativeResult", "creativeButton",
+            "Idea submitted! +10 points 🌟");
+    } else {
+        document.getElementById("creativeResult").innerText =
+            "Please write a little more about your idea.";
+    }
+}
+
+function checkGK() {
+    let answer = document.getElementById("gkAnswer").value;
+
+    if (answer === "Mars") {
+        completeChallenge("gk", "gkResult", "gkButton",
+            "Correct! +10 points 🎉");
+    } else {
+        document.getElementById("gkResult").innerText =
+            "Try again!";
+    }
+}
+
+function restoreProgress() {
+
+    const challenges = [
+        {
+            id: "brain",
+            result: "brainResult",
+            button: "brainButton",
+            message: "Already completed! +10 points 🎉"
+        },
+        {
+            id: "math",
+            result: "mathResult",
+            button: "mathButton",
+            message: "Already completed! +10 points 🎉"
+        },
+        {
+            id: "creative",
+            result: "creativeResult",
+            button: "creativeButton",
+            message: "Already completed! +10 points 🌟"
+        },
+        {
+            id: "gk",
+            result: "gkResult",
+            button: "gkButton",
+            message: "Already completed! +10 points 🎉"
+        }
+    ];
+
+    challenges.forEach(function(challenge) {
+        if (completed.includes(challenge.id)) {
+            document.getElementById(challenge.button).disabled = true;
+            document.getElementById(challenge.result).innerText =
+                challenge.message;
+        }
+    });
+
+    updateScore();
+}
+
+restoreProgress();
+
+</script>
+
+</body>
+</html>
+
