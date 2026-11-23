@@ -6,7 +6,7 @@ const FILES_TO_CACHE = [
   "style.css",
   "manifest.json",
   "smartstudy.html",
-  "quizzone.html",
+  
   "studyplanner.html",
   "futurefinder.html",
   "opportunityzone.html",
