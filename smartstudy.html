@@ -1,5 +1,6 @@
 
    
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,708 +14,516 @@
 body{
  margin:0;
  background:#0b0618;
- color:white;
+ color:#fff;
  font-family:Arial,sans-serif;
 }
-.study{
+.app{
  max-width:1000px;
  margin:auto;
- padding:22px;
+ padding:20px;
 }
-.top{
+header{
  display:flex;
  justify-content:space-between;
  align-items:center;
+ gap:10px;
  flex-wrap:wrap;
- gap:12px;
+ margin-bottom:22px;
 }
-.logo{
- font-size:23px;
- font-weight:bold;
- color:#c6a5ff;
+.logo{font-size:23px;font-weight:bold;color:#d9b5ff}
+button,select,input{
+ font:inherit;
 }
-button,select{font:inherit}
-button{border:0;cursor:pointer}
-.back,.option,.primary{
- padding:13px 17px;
- border-radius:12px;
+button{
+ border:1px solid #7651a7;
+ background:#281644;
  color:white;
+ padding:12px 16px;
+ border-radius:12px;
+ cursor:pointer;
 }
-.back{background:#29203e}
-.primary{
- background:linear-gradient(120deg,#7139db,#a45cff);
+button:hover{background:#633a91}
+select,input{
  width:100%;
- margin-top:15px;
+ padding:13px;
+ border-radius:10px;
+ border:1px solid #68458e;
+ background:#160d26;
+ color:white;
+ margin:7px 0 15px;
 }
-h1{font-size:30px;margin:25px 0 8px}
-.sub{color:#b9adc9;line-height:1.6}
 .panel{
- background:#171027;
- border:1px solid #392653;
- border-radius:18px;
- padding:20px;
- margin-top:20px;
+ background:#190f2b;
+ border:1px solid #382451;
+ border-radius:16px;
+ padding:17px;
+ margin:15px 0;
 }
+h1,h2,h3{color:#e3c5ff}
+h1{font-size:25px}
+h2{font-size:21px}
+h3{font-size:17px}
+.muted{color:#b8a8ca;font-size:14px}
 .grid{
  display:grid;
- grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
- gap:12px;
- margin-top:18px;
+ grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:10px;
 }
 .option{
- background:#211638;
- border:1px solid #49316a;
  text-align:left;
- min-height:65px;
- transition:.2s;
+ min-height:55px;
 }
-.option:hover{
- background:#39215b;
- transform:translateY(-2px);
+.chapter{
+ width:100%;
+ text-align:left;
+ margin:5px 0;
+ background:#211333;
 }
-.option.active{
- outline:2px solid #c6a5ff;
- background:#39215b;
+.content{
+ line-height:1.75;
+ color:#eee5f8;
+ white-space:normal;
 }
-.section{margin-top:20px}
+.content ul{padding-left:22px}
+.content li{margin:6px 0}
+.section{
+ border-left:3px solid #a66bdf;
+ padding:10px 14px;
+ margin:14px 0;
+ background:#211532;
+ border-radius:8px;
+}
 .hidden{display:none}
 .tag{
- color:#c7a4ff;
- font-size:13px;
- letter-spacing:.5px;
-}
-.note{
- color:#b9adc9;
- font-size:13px;
- line-height:1.6;
-}
-.content{color:#e9e1f4;line-height:1.75}
-.lesson{
- margin-top:18px;
- padding:18px;
- background:#211638;
- border:1px solid #49316a;
- border-radius:15px;
-}
-.lesson h2{color:#d8c2ff;margin-top:0}
-.lesson h3{color:#c6a5ff;margin-bottom:6px}
-.lesson p,.lesson li{
- color:#e7deef;
- line-height:1.7;
-}
-.pill{
  display:inline-block;
- background:#39215b;
- color:#e6d7ff;
+ background:#3a2453;
  padding:5px 9px;
  border-radius:20px;
  font-size:12px;
- margin:4px 5px 4px 0;
+ margin:3px;
 }
-.callout{
- background:#171027;
- border-left:3px solid #a45cff;
- padding:12px 14px;
- border-radius:8px;
- margin:12px 0;
+.back{margin-bottom:12px}
+.search{margin-top:12px}
+footer{
+ text-align:center;
+ color:#9986ad;
+ padding:25px 0;
+ font-size:12px;
 }
-.search{
- width:100%;
- padding:13px;
- background:#211638;
- color:white;
- border:1px solid #49316a;
- border-radius:12px;
- margin-top:12px;
-}
-.empty{
- padding:15px;
- border:1px dashed #654b83;
- border-radius:12px;
- color:#d4c4e8;
- line-height:1.6;
-}
-.small{font-size:12px;color:#b9adc9}
 </style>
 </head>
 
 <body>
-<div class="study">
+<div class="app">
 
-<header class="top">
- <div class="logo">✦ StudentVerse</div>
- <button class="back" onclick="goHome()">⌂ Dashboard</button>
+<header>
+ <div class="logo">✦ StudentVerse | SmartStudy</div>
+ <button onclick="location.href='index.html'">← Home</button>
 </header>
 
-<h1>SmartStudy 📚</h1>
-<p class="sub">
- Choose your board, class, subject and chapter.
- Your selected lesson opens below.
-</p>
+<div id="home">
+ <h1>SmartStudy</h1>
+ <p class="muted">Choose your board, class and subject to start learning.</p>
 
-<div class="panel">
-
- <div class="tag">STEP 1 · SELECT BOARD</div>
- <div class="grid" id="boardOptions"></div>
-
- <div class="section hidden" id="classSection">
-  <div class="tag">STEP 2 · SELECT CLASS</div>
-  <div class="grid" id="classOptions"></div>
+ <div class="panel">
+  <h3>Select Board</h3>
+  <div class="grid" id="boards"></div>
  </div>
 
- <div class="section hidden" id="subjectSection">
-  <div class="tag">STEP 3 · SELECT SUBJECT</div>
-  <div class="grid" id="subjectOptions"></div>
+ <div class="panel hidden" id="classPanel">
+  <h3>Select Class</h3>
+  <div class="grid" id="classes"></div>
  </div>
 
- <div class="section hidden" id="chapterSection">
-  <div class="tag">STEP 4 · SELECT CHAPTER</div>
-  <input id="chapterSearch"
-   class="search"
-   placeholder="Find a chapter..."
+ <div class="panel hidden" id="subjectPanel">
+  <h3>Select Subject</h3>
+  <div class="grid" id="subjects"></div>
+ </div>
+
+ <div class="panel hidden" id="chapterPanel">
+  <h3>Chapters</h3>
+  <input class="search" id="chapterSearch"
+   placeholder="Search chapter..."
    oninput="filterChapters()">
-  <div class="grid" id="chapterOptions"></div>
+  <div id="chapters"></div>
  </div>
-
- <div class="section hidden" id="lessonSection">
-  <div class="tag">YOUR STUDY SPACE</div>
-  <div id="lessonContent" class="content"></div>
- </div>
-
 </div>
 
-<p class="note">
- Chapter lists are starter lists and must be checked against
- the current prescribed textbook and school syllabus.
-</p>
+<div id="lessonPage" class="hidden">
+ <button class="back" onclick="backToChapters()">← Back to Chapters</button>
+ <div class="panel">
+  <div class="muted" id="lessonPath"></div>
+  <h1 id="lessonTitle"></h1>
+  <div id="lessonContent" class="content"></div>
+ </div>
+</div>
 
+<footer>StudentVerse SmartStudy</footer>
 </div>
 
 <script>
-
-/* SUBJECT OPTIONS */
-
-const subjects={
-
-CBSE:{
-6:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
-7:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
-8:["English","Hindi","Mathematics","Science","Social Science","Sanskrit"],
-9:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Information Technology"],
-10:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Information Technology"],
-11:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Informatics Practices","History","Political Science","Geography","Psychology","Sociology"],
-12:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Informatics Practices","History","Political Science","Geography","Psychology","Sociology"]
-},
-
-ICSE:{
-6:["English","Second Language","Mathematics","Science","History & Civics","Geography","Computer Studies","Art"],
-7:["English","Second Language","Mathematics","Science","History & Civics","Geography","Computer Studies","Art"],
-8:["English","Second Language","Mathematics","Science","History & Civics","Geography","Computer Studies","Art"],
-9:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Commercial Studies","Economics"],
-10:["English","Second Language","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Commercial Studies","Economics"]
-},
-
-ISC:{
-11:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Commerce","Economics","Computer Science","History","Political Science","Geography","Psychology","Sociology"],
-12:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Commerce","Economics","Computer Science","History","Political Science","Geography","Psychology","Sociology"]
-}
-
-};
-
-
-/* CHAPTER LISTS */
-
-const chapters={
-
-"CBSE-6-Mathematics":[
-"Patterns in Mathematics","Lines and Angles","Number Play",
-"Data Handling and Presentation","Prime Time","Perimeter and Area",
-"Fractions","Playing with Constructions","Symmetry",
-"The Other Side of Zero"
-],
-
-"CBSE-6-Science":[
-"The Wonderful World of Science","Diversity in the Living World",
-"Mindful Eating","Exploring Magnets","Measurement of Length and Motion",
-"Materials Around Us","Temperature and its Measurement",
-"A Journey through States of Water","Methods of Separation",
-"Living Creatures"
-],
-
-"CBSE-6-English":[
-"Reading Skills","Writing Skills","Grammar","Literature"
-],
-
-"CBSE-6-Hindi":[
-"अपठित बोध","व्याकरण","लेखन","पाठ्यपुस्तक"
-],
-
-"CBSE-7-Mathematics":[
-"Integers","Fractions and Decimals","Data Handling",
-"Simple Equations","Lines and Angles",
-"The Triangle and its Properties","Comparing Quantities",
-"Rational Numbers","Perimeter and Area","Algebraic Expressions"
-],
-
-"CBSE-7-Science":[
-"Nutrition in Plants","Nutrition in Animals","Heat",
-"Acids, Bases and Salts","Physical and Chemical Changes",
-"Respiration in Organisms","Transportation in Animals and Plants",
-"Reproduction in Plants","Motion and Time",
-"Electric Current and its Effects"
-],
-
-"CBSE-8-Mathematics":[
-"Rational Numbers","Linear Equations","Understanding Quadrilaterals",
-"Data Handling","Squares and Square Roots","Cubes and Cube Roots",
-"Comparing Quantities","Algebraic Expressions","Mensuration"
-],
-
-"CBSE-8-Science":[
-"Crop Production","Microorganisms","Synthetic Fibres",
-"Materials: Metals and Non-Metals","Coal and Petroleum",
-"Combustion and Flame","Conservation of Plants and Animals",
-"Cell Structure","Force and Pressure"
-],
-
-"CBSE-9-Mathematics":[
-"Number Systems","Polynomials","Coordinate Geometry",
-"Linear Equations in Two Variables","Introduction to Euclid's Geometry",
-"Lines and Angles","Triangles","Quadrilaterals",
-"Circles","Heron's Formula"
-],
-
-"CBSE-9-Science":[
-"Matter in Our Surroundings","Is Matter Around Us Pure",
-"Atoms and Molecules","Structure of the Atom",
-"The Fundamental Unit of Life","Tissues","Motion",
-"Force and Laws of Motion","Gravitation","Work and Energy"
-],
-
-"CBSE-9-English":["Reading","Writing and Grammar","Literature"],
-
-"CBSE-9-Hindi":["अपठित बोध","व्याकरण","लेखन","साहित्य"],
-
-"CBSE-9-Social Science":["History","Geography","Political Science","Economics"],
-
-"CBSE-10-Mathematics":[
-"Real Numbers","Polynomials","Pair of Linear Equations",
-"Quadratic Equations","Arithmetic Progressions","Triangles",
-"Coordinate Geometry","Introduction to Trigonometry",
-"Applications of Trigonometry","Circles"
-],
-
-"CBSE-10-Science":[
-"Chemical Reactions","Acids, Bases and Salts","Metals and Non-Metals",
-"Carbon Compounds","Life Processes","Control and Coordination",
-"How do Organisms Reproduce","Heredity","Light","The Human Eye"
-],
-
-"CBSE-10-English":["Reading","Writing","Grammar","Literature"],
-
-"CBSE-10-Hindi":["अपठित बोध","व्याकरण","लेखन","साहित्य"],
-
-"CBSE-10-Social Science":["History","Geography","Political Science","Economics"],
-
-"CBSE-11-Physics":[
-"Units and Measurements","Motion in a Straight Line",
-"Motion in a Plane","Laws of Motion","Work, Energy and Power",
-"System of Particles and Rotational Motion","Gravitation",
-"Mechanical Properties of Solids","Mechanical Properties of Fluids",
-"Thermal Properties of Matter","Thermodynamics","Kinetic Theory",
-"Oscillations","Waves"
-],
-
-"CBSE-11-Chemistry":[
-"Some Basic Concepts of Chemistry","Structure of Atom",
-"Classification of Elements","Chemical Bonding",
-"Chemical Thermodynamics","Equilibrium","Redox Reactions",
-"Organic Chemistry: Basic Principles","Hydrocarbons"
-],
-
-"CBSE-11-Mathematics":[
-"Sets","Relations and Functions","Trigonometric Functions",
-"Complex Numbers","Linear Inequalities","Permutations and Combinations",
-"Binomial Theorem","Sequences and Series","Straight Lines",
-"Conic Sections","Introduction to Three Dimensional Geometry",
-"Limits and Derivatives","Statistics","Probability"
-],
-
-"CBSE-11-Biology":[
-"The Living World","Biological Classification","Plant Kingdom",
-"Animal Kingdom","Morphology of Flowering Plants",
-"Anatomy of Flowering Plants","Structural Organisation in Animals",
-"Cell: The Unit of Life","Biomolecules","Cell Cycle and Cell Division",
-"Photosynthesis","Respiration in Plants","Plant Growth",
-"Breathing and Exchange of Gases","Body Fluids and Circulation",
-"Excretion","Locomotion","Neural Control","Chemical Coordination"
-],
-
-"CBSE-11-English":["Reading Skills","Writing Skills","Hornbill","Snapshots"],
-
-"CBSE-12-Physics":[
-"Electric Charges and Fields","Electrostatic Potential and Capacitance",
-"Current Electricity","Moving Charges and Magnetism",
-"Magnetism and Matter","Electromagnetic Induction","Alternating Current",
-"Electromagnetic Waves","Ray Optics","Wave Optics",
-"Dual Nature of Radiation","Atoms","Nuclei","Semiconductor Electronics"
-],
-
-"CBSE-12-Chemistry":[
-"Solutions","Electrochemistry","Chemical Kinetics",
-"d- and f-Block Elements","Coordination Compounds",
-"Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers",
-"Aldehydes, Ketones and Carboxylic Acids","Amines","Biomolecules"
-],
-
-"CBSE-12-Mathematics":[
-"Relations and Functions","Inverse Trigonometric Functions",
-"Matrices","Determinants","Continuity and Differentiability",
-"Applications of Derivatives","Integrals","Applications of Integrals",
-"Differential Equations","Vector Algebra",
-"Three Dimensional Geometry","Linear Programming","Probability"
-],
-
-"CBSE-12-Biology":[
-"Reproduction","Sexual Reproduction in Flowering Plants",
-"Human Reproduction","Reproductive Health",
-"Principles of Inheritance","Molecular Basis of Inheritance",
-"Evolution","Human Health and Disease","Microbes in Human Welfare",
-"Biotechnology","Organisms and Populations","Ecosystem","Biodiversity"
-],
-
-"CBSE-12-English":["Reading Skills","Writing Skills","Flamingo","Vistas"],
-
-"ICSE-9-Mathematics":[
-"Pure Arithmetic","Commercial Mathematics","Algebra",
-"Geometry","Statistics","Mensuration","Trigonometry",
-"Coordinate Geometry"
-],
-
-"ICSE-10-Mathematics":[
-"Commercial Mathematics","Algebra","Geometry",
-"Mensuration","Trigonometry","Statistics","Probability"
-],
-
-"ICSE-9-Physics":[
-"Measurements and Experimentation","Motion in One Dimension",
-"Laws of Motion","Fluids","Heat and Energy","Light","Sound",
-"Electricity and Magnetism"
-],
-
-"ICSE-10-Physics":[
-"Force","Work, Energy and Power","Machines",
-"Refraction of Light","Sound","Current Electricity",
-"Household Circuits","Electromagnetism"
-],
-
-"ICSE-9-Chemistry":[
-"Language of Chemistry","Chemical Changes","Water",
-"Atomic Structure","Periodic Table","Study of Gas Laws",
-"Atmospheric Pollution"
-],
-
-"ICSE-10-Chemistry":[
-"Periodic Properties","Chemical Bonding","Acids, Bases and Salts",
-"Analytical Chemistry","Mole Concept","Electrolysis",
-"Metallurgy","Organic Chemistry"
-],
-
-"ISC-11-Physics":[
-"Physical World and Measurement","Kinematics","Laws of Motion",
-"Work, Energy and Power","Rotational Motion","Gravitation",
-"Properties of Matter","Thermodynamics","Oscillations","Waves"
-],
-
-"ISC-12-Physics":[
-"Electrostatics","Current Electricity","Magnetism",
-"Electromagnetic Induction","Alternating Current",
-"Electromagnetic Waves","Optics","Dual Nature",
-"Atoms and Nuclei","Electronic Devices"
-],
-
-"ISC-11-Chemistry":[
-"Some Basic Concepts","Atomic Structure","Periodic Classification",
-"Chemical Bonding","States of Matter","Thermodynamics",
-"Equilibrium","Redox Reactions","Organic Chemistry"
-],
-
-"ISC-12-Chemistry":[
-"Solutions","Electrochemistry","Chemical Kinetics",
-"Surface Chemistry","Isolation of Elements","p-Block Elements",
-"d- and f-Block Elements","Coordination Compounds",
-"Organic Compounds","Biomolecules"
-],
-
-"ISC-11-Mathematics":[
-"Sets and Functions","Algebra","Coordinate Geometry",
-"Calculus","Statistics","Probability"
-],
-
-"ISC-12-Mathematics":[
-"Relations and Functions","Algebra","Calculus","Vectors",
-"Three Dimensional Geometry","Linear Programming","Probability"
-]
-
-};
-
-
-/* APP FUNCTIONS */
+const $ = id => document.getElementById(id);
 
 let selectedBoard="";
 let selectedClass="";
 let selectedSubject="";
-let currentChapters=[];
 
-const $=id=>document.getElementById(id);
+const classOptions={
+ CBSE:[6,7,8,9,10,11,12],
+ ICSE:[6,7,8,9,10],
+ ISC:[11,12]
+};
 
-function show(id){
- $(id).classList.remove("hidden");
-}
+/*
+ Subject availability is a starting catalogue.
+ Schools may offer different subject combinations.
+*/
 
-function hide(id){
- $(id).classList.add("hidden");
-}
+const subjectOptions={
+ CBSE:{
+  6:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Computer"],
+  7:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Computer"],
+  8:["English","Hindi","Mathematics","Science","Social Science","Sanskrit","Computer"],
+  9:["English","Hindi","Mathematics","Science","Social Science","Information Technology"],
+  10:["English","Hindi","Mathematics","Science","Social Science","Information Technology"],
+  11:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Political Science","History","Geography","Psychology"],
+  12:["English","Physics","Chemistry","Mathematics","Biology","Accountancy","Business Studies","Economics","Computer Science","Political Science","History","Geography","Psychology"]
+ },
+ ICSE:{
+  6:["English","Hindi","Mathematics","Physics","Chemistry","Biology","History","Geography","Computer Studies"],
+  7:["English","Hindi","Mathematics","Physics","Chemistry","Biology","History","Geography","Computer Studies"],
+  8:["English","Hindi","Mathematics","Physics","Chemistry","Biology","History","Geography","Computer Studies"],
+  9:["English Language","English Literature","Hindi","Mathematics","Physics","Chemistry","Biology","History and Civics","Geography","Computer Applications"],
+  10:["English Language","English Literature","Hindi","Mathematics","Physics","Chemistry","Biology","History and Civics","Geography","Computer Applications"]
+ },
+ ISC:{
+  11:["English","Physics","Chemistry","Mathematics","Biology","Computer Science","Accounts","Commerce","Economics","History","Political Science","Psychology"],
+  12:["English","Physics","Chemistry","Mathematics","Biology","Computer Science","Accounts","Commerce","Economics","History","Political Science","Psychology"]
+ }
+};
 
-function goHome(){
- location.href="index.html";
-}
+/*
+ Chapter names and detailed learning content are stored here.
+ Add each verified chapter as a separate entry.
+*/
 
-function resetFrom(level){
+const lessonData={
 
- if(level<=1){
-  hide("classSection");
-  hide("subjectSection");
-  hide("chapterSection");
-  hide("lessonSection");
+ "CBSE|6|Mathematics|Knowing Our Numbers":{
+  summary:"This chapter introduces numbers, their comparison, place value and methods of calculation.",
+  topics:[
+   {
+    name:"Large Numbers",
+    explanation:"Large numbers are numbers containing many digits. We use place value to read and write them correctly. In the Indian system, digits are grouped into ones, thousands, lakhs and crores.",
+    definitions:[
+     ["Place Value","The value of a digit according to its position in a number."],
+     ["Face Value","The digit itself, irrespective of its position."]
+    ],
+    formulas:["Place value = Digit × Value of its position"],
+    examples:[
+     ["Find the place value of 5 in 3,52,418.","The digit 5 is in the ten-thousands place. Its place value is 50,000."]
+    ],
+    important:["Always identify the position of a digit before finding its place value.","Use commas according to the Indian or International system."],
+    revision:["Face value is the digit itself.","Place value depends on position.","Indian grouping: 3,52,418."]
+   },
+   {
+    name:"Comparing Numbers",
+    explanation:"To compare two numbers, first compare their number of digits. A number with more digits is greater. If both have the same number of digits, compare digits from left to right.",
+    definitions:[
+     ["Ascending Order","Arranging numbers from smallest to largest."],
+     ["Descending Order","Arranging numbers from largest to smallest."]
+    ],
+    formulas:["For equal-length numbers, compare digits from the highest place value first."],
+    examples:[
+     ["Arrange 452, 524 and 425 in ascending order.","425 < 452 < 524."]
+    ],
+    important:["Start comparison from the leftmost digit.","Do not compare only the last digit."],
+    revision:["Ascending means increasing.","Descending means decreasing."]
+   }
+  ]
+ },
+
+ "CBSE|6|Mathematics|Whole Numbers":{
+  summary:"Whole numbers include zero and all natural numbers. They are used for counting and calculations.",
+  topics:[
+   {
+    name:"Natural and Whole Numbers",
+    explanation:"Natural numbers are 1, 2, 3, 4 and so on. When zero is included, the collection is called whole numbers.",
+    definitions:[
+     ["Natural Numbers","Counting numbers beginning with 1."],
+     ["Whole Numbers","Natural numbers together with zero."]
+    ],
+    formulas:["Whole numbers = {0,1,2,3,4,...}"],
+    examples:[
+     ["Is 0 a whole number?","Yes. Zero is a whole number, but it is not a natural number under the usual school definition."]
+    ],
+    important:["Every natural number is a whole number.","Zero is the smallest whole number."],
+    revision:["Natural numbers start at 1.","Whole numbers start at 0."]
+   },
+   {
+    name:"Properties of Whole Numbers",
+    explanation:"Addition and multiplication of whole numbers follow useful properties such as closure, commutativity, associativity and distributivity.",
+    definitions:[
+     ["Commutative Property","Changing the order of numbers does not change the result for addition or multiplication."],
+     ["Associative Property","Changing the grouping does not change the result for addition or multiplication."],
+     ["Distributive Property","Multiplication distributes over addition."]
+    ],
+    formulas:["a + b = b + a","a × b = b × a","(a+b)+c = a+(b+c)","a × (b+c) = ab + ac"],
+    examples:[
+     ["Use distributive property for 7 × 13.","7 × (10+3) = 70+21 = 91."]
+    ],
+    important:["Subtraction is not commutative.","Division is not commutative."],
+    revision:["Addition and multiplication are commutative.","Multiplication distributes over addition."]
+   }
+  ]
+ },
+
+ "CBSE|6|Science|Components of Food":{
+  summary:"Food contains nutrients that provide energy, support growth and help the body remain healthy.",
+  topics:[
+   {
+    name:"Nutrients",
+    explanation:"Nutrients are useful substances present in food. The major nutrients are carbohydrates, proteins, fats, vitamins and minerals. Water and roughage are also important parts of a balanced diet.",
+    definitions:[
+     ["Carbohydrates","Nutrients that are a major source of energy."],
+     ["Proteins","Nutrients needed for growth and repair of body tissues."],
+     ["Fats","Energy-rich nutrients that also help in insulation and other body functions."],
+     ["Vitamins","Protective nutrients needed in small amounts for normal body functions."],
+     ["Minerals","Inorganic nutrients needed for healthy growth and body processes."],
+     ["Roughage","Dietary fibre that helps food move through the digestive system."]
+    ],
+    formulas:[],
+    examples:[
+     ["Name foods rich in carbohydrates.","Rice, wheat, potatoes and bread."],
+     ["Name foods rich in proteins.","Pulses, beans, milk, eggs and nuts."]
+    ],
+    important:["A balanced diet contains different nutrients in suitable amounts.","Water is essential for body functions.","No single food provides every nutrient in the required amount."],
+    revision:["Carbohydrates: energy.","Proteins: growth and repair.","Fats: stored energy and insulation.","Vitamins and minerals: normal body functions."]
+   },
+   {
+    name:"Tests for Food Components",
+    explanation:"Some food components can be identified using simple classroom tests. Iodine solution is used to test for starch. A greasy translucent spot on paper can indicate fats.",
+    definitions:[
+     ["Starch Test","A test in which iodine solution turns blue-black in the presence of starch."]
+    ],
+    formulas:[],
+    examples:[
+     ["What happens when iodine is added to a food sample containing starch?","The sample turns blue-black."]
+    ],
+    important:["Perform food tests only with teacher supervision.","Do not taste laboratory samples."],
+    revision:["Iodine + starch gives a blue-black colour.","A translucent greasy spot may indicate fat."]
+   }
+  ]
+ },
+
+ "CBSE|7|Science|Nutrition in Plants":{
+  summary:"Plants prepare their own food through photosynthesis. This chapter explains autotrophic and heterotrophic nutrition.",
+  topics:[
+   {
+    name:"Photosynthesis",
+    explanation:"Green plants prepare food using carbon dioxide and water in the presence of sunlight and chlorophyll. This process is called photosynthesis. Oxygen is released during the process.",
+    definitions:[
+     ["Photosynthesis","The process by which green plants make food using sunlight, carbon dioxide and water."],
+     ["Chlorophyll","The green pigment that absorbs light energy in plants."]
+    ],
+    formulas:["Carbon dioxide + Water —(sunlight and chlorophyll)→ Glucose + Oxygen"],
+    examples:[
+     ["Why are leaves generally called food factories?","Because leaves contain chlorophyll and are the main sites of photosynthesis."]
+    ],
+    important:["Sunlight provides energy.","Roots absorb water from the soil.","Leaves take in carbon dioxide through stomata."],
+    revision:["Photosynthesis requires sunlight, water, carbon dioxide and chlorophyll.","Oxygen is released."]
+   },
+   {
+    name:"Modes of Nutrition",
+    explanation:"Organisms obtain food in different ways. Autotrophs prepare their own food, while heterotrophs depend on other organisms for food.",
+    definitions:[
+     ["Autotrophs","Organisms that prepare their own food."],
+     ["Heterotrophs","Organisms that depend on other organisms for food."]
+    ],
+    formulas:[],
+    examples:[
+     ["Give one example of a parasite in plants.","Cuscuta is a parasitic plant."]
+    ],
+    important:["Green plants are generally autotrophic.","Animals are heterotrophic.","Some plants obtain nutrients from other organisms."],
+    revision:["Autotrophic = self-feeding.","Heterotrophic = depends on other organisms."]
+   }
+  ]
  }
 
- if(level<=2){
-  hide("subjectSection");
-  hide("chapterSection");
-  hide("lessonSection");
- }
+};
 
- if(level<=3){
-  hide("chapterSection");
-  hide("lessonSection");
- }
-
- if(level<=4){
-  hide("lessonSection");
- }
-}
-
-function makeButton(label,action){
-
+function makeButton(label,fn){
  const b=document.createElement("button");
- b.className="option";
  b.textContent=label;
- b.onclick=action;
+ b.className="option";
+ b.onclick=fn;
  return b;
+}
 
+function resetPanels(){
+ ["classPanel","subjectPanel","chapterPanel"].forEach(id=>{
+  $(id).classList.add("hidden");
+ });
+ $("chapters").innerHTML="";
 }
 
 function selectBoard(board){
-
  selectedBoard=board;
  selectedClass="";
  selectedSubject="";
+ resetPanels();
 
- resetFrom(1);
+ $("classPanel").classList.remove("hidden");
+ $("classes").innerHTML="";
 
- document.querySelectorAll("#boardOptions button")
- .forEach(b=>{
-  b.classList.toggle("active",b.textContent===board);
- });
-
- renderClasses();
-
-}
-
-function renderClasses(){
-
- show("classSection");
- $("classOptions").innerHTML="";
-
- Object.keys(subjects[selectedBoard])
- .map(Number)
- .sort((a,b)=>a-b)
- .forEach(c=>{
-  $("classOptions").appendChild(
+ classOptions[board].forEach(c=>{
+  $("classes").appendChild(
    makeButton("Class "+c,()=>selectClass(c))
   );
  });
-
 }
 
 function selectClass(c){
-
  selectedClass=c;
  selectedSubject="";
+ $("subjectPanel").classList.remove("hidden");
+ $("chapterPanel").classList.add("hidden");
+ $("subjects").innerHTML="";
 
- resetFrom(2);
- show("subjectSection");
-
- $("subjectOptions").innerHTML="";
-
- document.querySelectorAll("#classOptions button")
- .forEach(b=>{
-  b.classList.toggle("active",b.textContent==="Class "+c);
- });
-
- (subjects[selectedBoard][c]||[])
- .forEach(s=>{
-  $("subjectOptions").appendChild(
-   makeButton(s,()=>selectSubject(s))
+ subjectOptions[selectedBoard][c].forEach(subject=>{
+  $("subjects").appendChild(
+   makeButton(subject,()=>selectSubject(subject))
   );
  });
-
 }
 
-function selectSubject(s){
-
- selectedSubject=s;
-
- resetFrom(3);
- show("chapterSection");
-
- $("chapterOptions").innerHTML="";
+function selectSubject(subject){
+ selectedSubject=subject;
+ $("chapterPanel").classList.remove("hidden");
  $("chapterSearch").value="";
 
- document.querySelectorAll("#subjectOptions button")
- .forEach(b=>{
-  b.classList.toggle("active",b.textContent===s);
+ const keys=Object.keys(lessonData).filter(key=>{
+  const p=key.split("|");
+  return p[0]===selectedBoard &&
+         p[1]===String(selectedClass) &&
+         p[2]===selectedSubject;
  });
 
- const key=`${selectedBoard}-${selectedClass}-${s}`;
-
- currentChapters=chapters[key]||[];
-
- if(!currentChapters.length){
-
-  $("chapterOptions").innerHTML=
-  '<div class="empty">Chapter list for this subject is not loaded yet. No made-up chapter names have been added. Please check your current prescribed textbook or school syllabus.</div>';
-
-  return;
- }
-
- renderChapterButtons(currentChapters);
-
+ const chapterNames=keys.map(key=>key.split("|")[3]);
+ renderChapters(chapterNames);
 }
 
-function renderChapterButtons(list){
-
- $("chapterOptions").innerHTML="";
+function renderChapters(list){
+ $("chapters").innerHTML="";
 
  if(!list.length){
-
-  $("chapterOptions").innerHTML=
-  '<div class="empty">No matching chapter found.</div>';
-
+  $("chapters").innerHTML=
+   '<div class="section">Chapter-wise verified study material has not yet been added for this subject. No invented chapter list or generic notes are being shown.</div>';
   return;
  }
 
- list.forEach((ch,i)=>{
-
-  $("chapterOptions").appendChild(
-   makeButton(`${i+1}. ${ch}`,()=>openChapter(ch,i+1))
-  );
-
+ list.forEach(ch=>{
+  const b=document.createElement("button");
+  b.className="chapter";
+  b.textContent="📘 "+ch;
+  b.onclick=()=>openChapter(ch);
+  $("chapters").appendChild(b);
  });
-
 }
 
 function filterChapters(){
-
- const q=$("chapterSearch").value.trim().toLowerCase();
-
- renderChapterButtons(
-  currentChapters.filter(ch=>ch.toLowerCase().includes(q))
- );
-
+ const q=$("chapterSearch").value.toLowerCase();
+ const keys=Object.keys(lessonData).filter(key=>{
+  const p=key.split("|");
+  return p[0]===selectedBoard &&
+         p[1]===String(selectedClass) &&
+         p[2]===selectedSubject &&
+         p[3].toLowerCase().includes(q);
+ });
+ renderChapters(keys.map(k=>k.split("|")[3]));
 }
 
 function escapeHTML(value){
-
- return String(value).replace(/[&<>"']/g,ch=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
- }[ch]));
-
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ })[c]);
 }
 
-function openChapter(ch,n){
+function makeList(items){
+ if(!items || !items.length) return "<p>Not applicable for this topic.</p>";
+ return "<ul>"+items.map(x=>"<li>"+escapeHTML(x)+"</li>").join("")+"</ul>";
+}
 
- show("lessonSection");
+function openChapter(ch){
+ const key=[selectedBoard,selectedClass,selectedSubject,ch].join("|");
+ const data=lessonData[key];
 
- $("lessonContent").innerHTML=`
+ if(!data) return;
 
- <div class="lesson">
+ $("home").classList.add("hidden");
+ $("lessonPage").classList.remove("hidden");
 
- <span class="pill">${escapeHTML(selectedBoard)}</span>
- <span class="pill">Class ${selectedClass}</span>
- <span class="pill">${escapeHTML(selectedSubject)}</span>
+ $("lessonPath").textContent=
+  selectedBoard+" • Class "+selectedClass+" • "+selectedSubject;
 
- <h2>📖 ${escapeHTML(ch)}</h2>
+ $("lessonTitle").textContent=ch;
 
- <div class="callout">
- <strong>Chapter selected successfully!</strong>
- This chapter's verified detailed notes have not yet been
- added to StudentVerse.
- </div>
-
- <h3>What this study space will contain</h3>
-
- <ul>
-  <li>Chapter overview and learning objectives</li>
-  <li>Topic-wise explanations and short notes</li>
-  <li>Important definitions and key terms</li>
-  <li>Formulas, diagrams or dates where relevant</li>
-  <li>Worked examples with explanations</li>
-  <li>Quick revision sheet</li>
-  <li>Chapter-based practice questions</li>
- </ul>
-
- <h3>Study checklist</h3>
-
- <ul>
-  <li>Read the prescribed textbook chapter once.</li>
-  <li>Write down unfamiliar terms and meanings.</li>
-  <li>Mark examples, diagrams and exercise questions.</li>
-  <li>Revise the chapter and solve the textbook exercise.</li>
- </ul>
-
- <p class="small">
- This is a chapter workspace, not a substitute for
- chapter-specific notes. Detailed lesson packs must be
- added from the correct board textbook and current syllabus.
- </p>
-
+ let html=`
+ <div class="section">
+ <h2>Chapter Summary</h2>
+ <p>${escapeHTML(data.summary)}</p>
  </div>
  `;
 
- $("lessonContent").scrollIntoView({
-  behavior:"smooth",
-  block:"start"
+ data.topics.forEach((topic,index)=>{
+  html+=`
+  <div class="section">
+   <span class="tag">Topic ${index+1}</span>
+   <h2>${escapeHTML(topic.name)}</h2>
+
+   <h3>Detailed Explanation</h3>
+   <p>${escapeHTML(topic.explanation)}</p>
+
+   <h3>Definitions</h3>
+   ${topic.definitions.map(d=>
+    `<p><b>${escapeHTML(d[0])}:</b> ${escapeHTML(d[1])}</p>`
+   ).join("")}
+
+   <h3>Formulas</h3>
+   ${makeList(topic.formulas)}
+
+   <h3>Solved Examples</h3>
+   ${topic.examples.map(e=>
+    `<p><b>Question:</b> ${escapeHTML(e[0])}<br>
+    <b>Solution:</b> ${escapeHTML(e[1])}</p>`
+   ).join("")}
+
+   <h3>Important Points</h3>
+   ${makeList(topic.important)}
+
+   <h3>Quick Revision</h3>
+   ${makeList(topic.revision)}
+  </div>
+  `;
  });
 
+ $("lessonContent").innerHTML=html;
+ window.scrollTo(0,0);
 }
 
-
-/* LOAD BOARDS */
+function backToChapters(){
+ $("lessonPage").classList.add("hidden");
+ $("home").classList.remove("hidden");
+ $("chapterPanel").classList.remove("hidden");
+ window.scrollTo(0,0);
+}
 
 ["CBSE","ICSE","ISC"].forEach(board=>{
-
- $("boardOptions").appendChild(
+ $("boards").appendChild(
   makeButton(board,()=>selectBoard(board))
  );
-
 });
-
 </script>
 </body>
 </html>
