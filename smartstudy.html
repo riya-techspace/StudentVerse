@@ -7782,46 +7782,107 @@ function openChapter(ch){
     selectedBoard+" • Class "+selectedClass+" • "+selectedSubject;
 
   $("lessonTitle").textContent=ch;
-
-  let html=`
-    <div class="section">
-      <h2>Chapter Summary</h2>
-      <p>${escapeHTML(data.summary || "Summary not added yet.")}</p>
-    </div>
-  `;
-
-  const topics=Array.isArray(data.topics)?data.topics:[];
-
-  topics.forEach((topic,index)=>{
-    html+=`
-      <div class="section">
-        <span class="tag">Topic ${index+1}</span>
-        <h2>${escapeHTML(topic.name || "Topic")}</h2>
-
-        <h3>Detailed Explanation</h3>
-        <p>${escapeHTML(topic.explanation || "Explanation not added yet.")}</p>
-
-        ${makeDetails(topic.definitions,"Definitions")}
-
-        ${makeDetails(topic.formulas,"Formulas")}
-
-        ${makeDetails(topic.examples,"Solved Examples")}
-
-        ${makeDetails(topic.important,"Important Points")}
-
-        ${makeDetails(topic.revision,"Quick Revision")}
-      </div>
-    `;
-  });
-
-  if(!topics.length){
-    html+="<div class='section'>Topic-wise notes are not available yet.</div>";
-  }
-
-  $("lessonContent").innerHTML=html;
-  window.scrollTo(0,0);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
        
+function makeList(items){
+ if(!items || (Array.isArray(items) && items.length===0)){
+  return "<p>Not available for this topic.</p>";
+ }
+
+ const list=Array.isArray(items) ? items : [items];
+
+ return "<ul>"+list.map(item=>{
+  if(Array.isArray(item)){
+   return "<li><b>"+escapeHTML(item[0])+
+          ":</b> "+escapeHTML(item[1] || "")+"</li>";
+  }
+  return "<li>"+escapeHTML(item)+"</li>";
+ }).join("")+"</ul>";
+}
+
+function makeDetails(items,label){
+ if(!items || (Array.isArray(items) && items.length===0)){
+  return "<p>Not available for this topic.</p>";
+ }
+
+ const list=Array.isArray(items) ? items : [items];
+
+ return list.map(item=>{
+  if(Array.isArray(item)){
+   return "<p><b>"+escapeHTML(item[0])+
+          ":</b> "+escapeHTML(item[1] || "")+"</p>";
+  }
+  return "<p>"+escapeHTML(item)+"</p>";
+ }).join("");
+}
+
+function openChapter(ch){
+ const key=[
+  selectedBoard,
+  selectedClass,
+  selectedSubject,
+  ch
+ ].join("|");
+
+ const data=lessonData[key];
+
+ if(!data){
+  alert("Study material is not available for this chapter yet.");
+  return;
+ }
+
+ $("home").classList.add("hidden");
+ $("lessonPage").classList.remove("hidden");
+
+ $("lessonPath").textContent=
+  selectedBoard+" • Class "+selectedClass+" • "+selectedSubject;
+
+ $("lessonTitle").textContent=ch;
+
+ let html=`
+  <div class="section">
+   <h2>Chapter Summary</h2>
+   <p>${escapeHTML(data.summary || "Summary not available.")}</p>
+  </div>
+ `;
+
+ if(!data.topics || !data.topics.length){
+  html+=`<div class="section">
+   <p>Topic-wise notes are not available yet.</p>
+  </div>`;
+ }else{
+  data.topics.forEach((topic,index)=>{
+   html+=`
+    <div class="section">
+     <span class="tag">Topic ${index+1}</span>
+     <h2>${escapeHTML(topic.name || "Topic")}</h2>
+
+     <h3>Detailed Explanation</h3>
+     <p>${escapeHTML(topic.explanation || "Explanation not available.")}</p>
+
+     <h3>Definitions</h3>
+     ${makeDetails(topic.definitions,"Definitions")}
+
+     <h3>Formulas</h3>
+     ${makeList(topic.formulas)}
+
+     <h3>Solved Examples</h3>
+     ${makeDetails(topic.examples,"Examples")}
+
+     <h3>Important Points</h3>
+     ${makeList(topic.important)}
+
+     <h3>Quick Revision</h3>
+     ${makeList(topic.revision)}
+    </div>
+   `;
+  });
+ }
+
+ $("lessonContent").innerHTML=html;
+ window.scrollTo(0,0);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 function backToChapters(){
  $("lessonPage").classList.add("hidden");
