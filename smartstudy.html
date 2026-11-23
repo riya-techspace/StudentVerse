@@ -8483,93 +8483,170 @@ function selectClass(cls) {
 
   const subjects = [...new Set(
     Object.keys(lessonData)
+<script>
+// ===== STUDENTVERSE FINAL RENDERING SYSTEM =====
+
+let svBoard = "";
+let svClass = "";
+let svSubject = "";
+
+function svEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[ch]);
+}
+
+function svPanel(id) {
+  ["home", "classPanel", "subjectPanel", "chapterPanel", "lessonPage"]
+    .forEach(name => {
+      const el = document.getElementById(name);
+      if (el) el.style.display = name === id ? "block" : "none";
+    });
+}
+
+function svRenderBoards() {
+  svPanel("home");
+
+  const boards = [
+    ["CBSE", "Central Board of Secondary Education"],
+    ["ICSE", "Indian Certificate of Secondary Education"],
+    ["ISC", "Indian School Certificate"]
+  ];
+
+  const target = document.getElementById("boards");
+  if (!target) return;
+
+  target.innerHTML = boards.map(b => `
+    <button class="item-card" onclick="svSelectBoard('${b[0]}')">
+      <h3>${b[0]}</h3>
+      <p>${b[1]}</p>
+    </button>
+  `).join("");
+}
+
+function svSelectBoard(board) {
+  svBoard = board;
+  svPanel("classPanel");
+
+  const classes = board === "CBSE"
+    ? [6,7,8,9,10,11,12]
+    : board === "ICSE"
+      ? [6,7,8,9,10]
+      : [11,12];
+
+  const target = document.getElementById("classes");
+  if (!target) return;
+
+  target.innerHTML = classes.map(cls => `
+    <button class="item-card" onclick="svSelectClass('${cls}')">
+      <h3>Class ${cls}</h3>
+      <p>Explore subjects and chapters</p>
+    </button>
+  `).join("");
+}
+
+function svSelectClass(cls) {
+  svClass = String(cls);
+
+  const subjects = [...new Set(
+    Object.keys(lessonData)
       .filter(key => {
         const p = key.split("|");
-        return p[0] === selectedBoard && p[1] === selectedClass;
+        return p[0] === svBoard && p[1] === svClass;
       })
       .map(key => key.split("|")[2])
   )];
 
-  document.getElementById("subjects").innerHTML =
-    subjects.length ? subjects.map(subject => `
-      <button class="item-card" onclick="selectSubject('${escapeHTML(subject)}')">
-        <h3>${escapeHTML(subject)}</h3>
-        <p>Open study material</p>
-      </button>
-    `).join("") : `
-      <p class="empty-message">
-        Study material for this class is being prepared.
-      </p>
-    `;
+  svPanel("subjectPanel");
+
+  const target = document.getElementById("subjects");
+  if (!target) return;
+
+  target.innerHTML = subjects.length
+    ? subjects.map(subject => `
+        <button class="item-card"
+          onclick="svSelectSubject('${svEscape(subject)}')">
+          <h3>${svEscape(subject)}</h3>
+          <p>Open study material</p>
+        </button>
+      `).join("")
+    : "<p>Study material is being prepared.</p>";
 }
 
-function selectSubject(subject) {
-  selectedSubject = subject;
-  showPanel("chapterPanel");
-  renderChapters();
+function svSelectSubject(subject) {
+  svSubject = subject;
+  svPanel("chapterPanel");
+  svRenderChapters();
 }
 
-function renderChapters() {
-  const searchBox = document.getElementById("chapterSearch");
-  const search = searchBox ? searchBox.value.toLowerCase().trim() : "";
+function svRenderChapters() {
+  const search = (
+    document.getElementById("chapterSearch")?.value || ""
+  ).toLowerCase().trim();
 
   const chapters = Object.keys(lessonData)
     .filter(key => {
       const p = key.split("|");
-      return p[0] === selectedBoard &&
-        p[1] === selectedClass &&
-        p[2] === selectedSubject;
+      return p[0] === svBoard &&
+        p[1] === svClass &&
+        p[2] === svSubject;
     })
     .map(key => key.split("|")[3])
     .filter(name => name && name.toLowerCase().includes(search));
 
-  document.getElementById("chapters").innerHTML =
-    chapters.length ? chapters.map((chapter,index) => `
-      <button class="item-card" onclick="renderChapter('${escapeHTML(chapter).replace(/'/g,"&#39;")}')">
-        <span class="chapter-number">Chapter ${index + 1}</span>
-        <h3>${escapeHTML(chapter)}</h3>
-        <p>Read notes and important questions</p>
-      </button>
-    `).join("") : `
-      <p class="empty-message">No matching chapters found.</p>
-    `;
+  const target = document.getElementById("chapters");
+  if (!target) return;
+
+  target.innerHTML = chapters.length
+    ? chapters.map((chapter, i) => `
+        <button class="item-card"
+          onclick="svRenderChapter('${svEscape(chapter).replace(/'/g, '&#39;')}')">
+          <span>Chapter ${i + 1}</span>
+          <h3>${svEscape(chapter)}</h3>
+          <p>Read notes and important questions</p>
+        </button>
+      `).join("")
+    : "<p>No matching chapters found.</p>";
 }
 
-function filterChapters() {
-  renderChapters();
-}
-
-function renderValue(value) {
+function svRenderValue(value) {
   if (value === null || value === undefined) return "";
 
   if (Array.isArray(value)) {
-    return `<ul>${value.map(item =>
-      `<li>${renderValue(item)}</li>`
-    ).join("")}</ul>`;
+    return "<ul>" + value.map(item =>
+      "<li>" + svRenderValue(item) + "</li>"
+    ).join("") + "</ul>";
   }
 
   if (typeof value === "object") {
-    return `<ul>${Object.entries(value).map(([key,val]) =>
-      `<li><strong>${escapeHTML(key)}:</strong> ${renderValue(val)}</li>`
-    ).join("")}</ul>`;
+    return "<ul>" + Object.entries(value).map(([key, val]) =>
+      "<li><strong>" + svEscape(key) + ":</strong> " +
+      svRenderValue(val) + "</li>"
+    ).join("") + "</ul>";
   }
 
-  return escapeHTML(value);
+  return svEscape(value);
 }
 
-function renderSection(title, value) {
-  if (value === undefined || value === null || value === "") return "";
+function svSection(title, value) {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
 
   return `
     <section class="note-section">
-      <h3>${escapeHTML(title)}</h3>
-      ${renderValue(value)}
+      <h3>${svEscape(title)}</h3>
+      ${svRenderValue(value)}
     </section>
   `;
 }
 
-function renderChapter(chapterName) {
-  const key = `${selectedBoard}|${selectedClass}|${selectedSubject}|${chapterName}`;
+function svRenderChapter(chapter) {
+  const key = `${svBoard}|${svClass}|${svSubject}|${chapter}`;
   const data = lessonData[key];
 
   if (!data) {
@@ -8577,10 +8654,79 @@ function renderChapter(chapterName) {
     return;
   }
 
-  showPanel("lessonPage");
+  svPanel("lessonPage");
 
-  document.getElementById("lessonPath").textContent =
-    `${selectedBoard} / Class ${selectedClass} / ${selectedSubject}`;
+  const path = document.getElementById("lessonPath");
+  const title = document.getElementById("lessonTitle");
+  const content = document.getElementById("lessonContent");
 
-  document.getElementById("lessonTitle").textContent = chapterName;
+  if (path) {
+    path.textContent =
+      `${svBoard} / Class ${svClass} / ${svSubject}`;
+  }
 
+  if (title) title.textContent = chapter;
+  if (!content) return;
+
+  let html = `
+    <section class="lesson-intro">
+      <h2>Chapter Overview</h2>
+      <p>${svEscape(data.summary || "Explore this chapter.")}</p>
+    </section>
+  `;
+
+  if (Array.isArray(data.topics)) {
+    data.topics.forEach((topic, index) => {
+      if (typeof topic === "string") {
+        html += `<section class="topic-card">
+          <h2>${svEscape(topic)}</h2>
+        </section>`;
+        return;
+      }
+
+      html += `
+        <section class="topic-card">
+          <h2>${index + 1}. ${svEscape(topic.name || "Topic")}</h2>
+          ${svSection("Explanation", topic.explanation)}
+          ${svSection("Definitions", topic.definitions)}
+          ${svSection("Important Points", topic.importantPoints)}
+          ${svSection("Formulas", topic.formulas)}
+          ${svSection("Examples", topic.examples)}
+          ${svSection("Key Concepts", topic.concepts)}
+        </section>
+      `;
+    });
+  }
+
+  html += svSection("Important Formulas", data.formulas);
+  html += svSection("Important Definitions", data.definitions);
+  html += svSection("Quick Revision", data.revision);
+  html += svSection("Important Questions", data.questions);
+  html += svSection("Answers", data.answers);
+
+  content.innerHTML = html;
+}
+
+function filterChapters() {
+  svRenderChapters();
+}
+
+function backToChapters() {
+  svPanel("chapterPanel");
+  svRenderChapters();
+}
+
+// Make functions available to HTML buttons
+window.svSelectBoard = svSelectBoard;
+window.svSelectClass = svSelectClass;
+window.svSelectSubject = svSelectSubject;
+window.svRenderChapter = svRenderChapter;
+window.filterChapters = filterChapters;
+window.backToChapters = backToChapters;
+
+// Start app
+svRenderBoards();
+
+</script>
+</body>
+</html>
