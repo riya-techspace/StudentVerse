@@ -7716,16 +7716,9 @@ function escapeHTML(value){
  })[c]);
 }
 
-function makeList(items){
- if(!items || !items.length) return "<p>Not applicable for this topic.</p>";
- return "<ul>"+items.map(x=>"<li>"+escapeHTML(x)+"</li>").join("")+"</ul>";
-}
 
-function openChapter(ch){
- const key=[selectedBoard,selectedClass,selectedSubject,ch].join("|");
- const data=lessonData[key];
 
- if(!data) return;
+
 
 function makeList(items){
   if(!items) return "<p>Not added yet.</p>";
