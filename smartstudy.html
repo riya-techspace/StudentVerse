@@ -8431,56 +8431,7 @@ function escapeHTML(value) {
   });
 }
 
-function showPanel(panelId) {
-  ["home","classPanel","subjectPanel","chapterPanel","lessonPage"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = "none";
-  });
-
-  const panel = document.getElementById(panelId);
-  if (panel) panel.style.display = "block";
-}
-
-function renderBoards() {
-  showPanel("home");
-
-  const boards = [
-    {name:"CBSE", description:"Central Board of Secondary Education"},
-    {name:"ICSE", description:"Indian Certificate of Secondary Education"},
-    {name:"ISC", description:"Indian School Certificate"}
-  ];
-
-  document.getElementById("boards").innerHTML = boards.map(board => `
-    <button class="item-card" onclick="selectBoard('${board.name}')">
-      <h3>${board.name}</h3>
-      <p>${board.description}</p>
-    </button>
-  `).join("");
-}
-
-function selectBoard(board) {
-  selectedBoard = board;
-  showPanel("classPanel");
-
-  document.getElementById("classes").innerHTML =
-    Array.from(
-      {length: board === "CBSE" ? 7 : board === "ICSE" ? 5 : 2},
-      (_,i) => board === "CBSE" ? i + 6 :
-        board === "ICSE" ? i + 6 : i + 11
-    ).map(cls => `
-      <button class="item-card" onclick="selectClass('${cls}')">
-        <h3>Class ${cls}</h3>
-        <p>Explore subjects and chapters</p>
-      </button>
-    `).join("");
-}
-
-function selectClass(cls) {
-  selectedClass = String(cls);
-  showPanel("subjectPanel");
-
-  const subjects = [...new Set(
-    Object.keys(lessonData)
+</script>
 <script>
 // ===== STUDENTVERSE FINAL RENDERING SYSTEM =====
 
