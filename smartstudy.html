@@ -8450,11 +8450,16 @@ function svEscape(value) {
 }
 
 function svPanel(id) {
-  ["home", "classPanel", "subjectPanel", "chapterPanel", "lessonPage"]
-    .forEach(name => {
-      const el = document.getElementById(name);
-      if (el) el.style.display = name === id ? "block" : "none";
-    });
+  const home = document.getElementById("home");
+  const lesson = document.getElementById("lessonPage");
+
+  if (home) home.style.display = id === "lessonPage" ? "none" : "block";
+  if (lesson) lesson.style.display = id === "lessonPage" ? "block" : "none";
+
+  ["classPanel", "subjectPanel", "chapterPanel"].forEach(name => {
+    const el = document.getElementById(name);
+    if (el) el.style.display = name === id ? "block" : "none";
+  });
 }
 
 function svRenderBoards() {
